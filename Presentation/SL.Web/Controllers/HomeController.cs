@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SL.Web.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BasePublicController
 {
     public HomeController()
     {
