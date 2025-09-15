@@ -43,5 +43,11 @@
     <ProjectReference Include="..\..\..\PazarciyizLite\Core\PL.Application\SL.Application.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructre\SL.Infrastructre\SL.Infrastructre.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructre\SL.Persistence\SL.Persistence.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>
