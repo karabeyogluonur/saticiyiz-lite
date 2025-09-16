@@ -13,7 +13,6 @@
     <None Remove="Areas\Dashboard\" />
     <None Remove="Areas\Dashboard\Controller\" />
     <None Remove="Areas\Dashboard\Views\" />
-    <None Remove="Areas\Dashboard\Views\Home\" />
     <None Remove="Areas\Dashboard\Views\Shared\" />
     <None Remove="Mvc\" />
     <None Remove="Mvc\Controllers\" />
@@ -26,7 +25,6 @@
     <Folder Include="Areas\Dashboard\" />
     <Folder Include="Areas\Dashboard\Controller\" />
     <Folder Include="Areas\Dashboard\Views\" />
-    <Folder Include="Areas\Dashboard\Views\Home\" />
     <Folder Include="Areas\Dashboard\Views\Shared\" />
     <Folder Include="Mvc\" />
     <Folder Include="Mvc\Controllers\" />
