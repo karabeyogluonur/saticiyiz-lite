@@ -10,10 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" href="" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <link href="themes/metronic-v1/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="themes/metronic-v1/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="themes/metronic-v1/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-    <link href="themes/metronic-v1/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/themes/metronic-v1/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/themes/metronic-v1/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/themes/metronic-v1/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/themes/metronic-v1/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <script>if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
 
 </head>
@@ -46,10 +46,10 @@
     </div>
 
 
-    <script>var hostUrl = "themes/metronic-v1/assets/";</script>
-    <script src="themes/metronic-v1/assets/plugins/global/plugins.bundle.js"></script>
-    <script src="themes/metronic-v1/assets/js/scripts.bundle.js"></script>
-    <script src="themes/metronic-v1/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+    <script>var hostUrl = "~/themes/metronic-v1/assets/";</script>
+    <script src="~/themes/metronic-v1/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="~/themes/metronic-v1/assets/js/scripts.bundle.js"></script>
+    <script src="~/themes/metronic-v1/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
@@ -61,10 +61,12 @@
     <script src="https://cdn.amcharts.com/lib/5/geodata/usaLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script>
-    <script src="themes/metronic-v1/assets/plugins/custom/datatables/datatables.bundle.js"></script>
-    <script src="themes/metronic-v1/assets/js/widgets.bundle.js"></script>
-    <script src="themes/metronic-v1/assets/js/custom/widgets.js"></script>
-    <script src="themes/metronic-v1/assets/js/custom/apps/chat/chat.js"></script>
+    <script src="~/themes/metronic-v1/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+    <script src="~/themes/metronic-v1/assets/js/widgets.bundle.js"></script>
+    <script src="~/themes/metronic-v1/assets/js/custom/widgets.js"></script>
+    <script src="~/themes/metronic-v1/assets/js/custom/apps/chat/chat.js"></script>
+    <script src="~/themes/metronic-v1/assets/js/custom/authentication/sign-up/general.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>
