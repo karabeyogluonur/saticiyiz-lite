@@ -17,11 +17,19 @@
     <None Remove="Interfaces\Repositories\" />
     <None Remove="Interfaces\Collections\" />
     <None Remove="Interfaces\Repositories\UnitOfWork\" />
+    <None Remove="Models\" />
+    <None Remove="Models\ViewModels\" />
+    <None Remove="Models\ViewModels\Account\" />
+    <None Remove="Interfaces\Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="Interfaces\Repositories\" />
     <Folder Include="Interfaces\Collections\" />
     <Folder Include="Interfaces\Repositories\UnitOfWork\" />
+    <Folder Include="Models\" />
+    <Folder Include="Models\ViewModels\" />
+    <Folder Include="Models\ViewModels\Account\" />
+    <Folder Include="Interfaces\Services\" />
   </ItemGroup>
 </Project>

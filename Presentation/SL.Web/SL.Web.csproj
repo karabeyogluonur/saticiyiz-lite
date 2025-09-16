@@ -19,6 +19,7 @@
     <None Remove="Areas\Admin\" />
     <None Remove="Areas\Admin\Controller\" />
     <None Remove="Areas\Admin\Views\" />
+    <None Remove="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\" />
@@ -31,6 +32,7 @@
     <Folder Include="Areas\Admin\" />
     <Folder Include="Areas\Admin\Controller\" />
     <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
