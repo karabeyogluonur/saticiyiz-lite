@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SL.Domain.Entities;
@@ -11,8 +10,10 @@ namespace SL.Persistence.Utilities
     {
         public static void AddPersistenceService(this IServiceCollection services)
         {
-            services.AddDbContext<MasterDbContext>(options =>options.UseNpgsql(Configuration.MasterConnectionString));
+            services.AddDbContext<MasterDbContext>(options =>options.UseNpgsql(Configuration.MasterConnectionString)).AddUnitOfWork<MasterDbContext>();
             services.AddIdentityCore<ApplicationUser>().AddEntityFrameworkStores<MasterDbContext>();
+
+            
         }
     }
 }
