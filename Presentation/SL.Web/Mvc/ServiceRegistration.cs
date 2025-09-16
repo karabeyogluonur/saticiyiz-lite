@@ -8,7 +8,7 @@ namespace SL.Web.Mvc
     {
         public static void AddBaseServices(this IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
         public static void AddLayerServices(this IServiceCollection services)
         {
