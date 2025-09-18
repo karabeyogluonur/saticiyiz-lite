@@ -12,6 +12,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Interfaces\" />
@@ -23,6 +26,8 @@
     <None Remove="Models\ViewModels\Account\" />
     <None Remove="Interfaces\Services\" />
     <None Remove="Middlewares\" />
+    <None Remove="Validators\" />
+    <None Remove="Validators\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -34,6 +39,8 @@
     <Folder Include="Models\ViewModels\Account\" />
     <Folder Include="Interfaces\Services\" />
     <Folder Include="Middlewares\" />
+    <Folder Include="Validators\" />
+    <Folder Include="Validators\Account\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SL.Domain\SL.Domain.csproj" />
