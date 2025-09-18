@@ -24,6 +24,9 @@ namespace SL.Persistence.Services
             {
                 UserName = registerViewModel.Email,
                 Email = registerViewModel.Email,
+                FirstName = registerViewModel.FirstName,
+                LastName = registerViewModel.LastName,
+                PhoneNumber = registerViewModel.Phone,
                 TenantDatabaseName = tenantDatabaseName
             };
 
