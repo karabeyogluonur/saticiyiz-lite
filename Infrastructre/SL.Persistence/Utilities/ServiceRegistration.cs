@@ -1,4 +1,7 @@
-﻿using System.Reflection.Metadata;
+﻿
+
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SL.Application.Interfaces.Services;
@@ -13,12 +16,25 @@ namespace SL.Persistence.Utilities
         public static void AddPersistenceService(this IServiceCollection services)
         {
             services.AddDbContext<MasterDbContext>(options =>options.UseNpgsql(Configuration.MasterConnectionString)).AddUnitOfWork<MasterDbContext>();
-            services.AddIdentityCore<ApplicationUser>().AddEntityFrameworkStores<MasterDbContext>();
+            services.AddDbContext<TenantDbContext>(options => options.UseNpgsql(Configuration.MasterConnectionString)).AddUnitOfWork<TenantDbContext>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<MasterDbContext>()
+            .AddDefaultTokenProviders();
 
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<ITenantDatabaseService, TenantDatabaseService>();
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 
-            
+
         }
     }
 }
