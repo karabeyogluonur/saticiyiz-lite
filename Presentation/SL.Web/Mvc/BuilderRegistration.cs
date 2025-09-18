@@ -1,5 +1,7 @@
 ﻿using System;
+using SL.Application.Middlewares;
 using SL.Persistence.Seeds;
+
 namespace SL.Web.Mvc
 {
     public static class BuilderRegistration
@@ -25,6 +27,7 @@ namespace SL.Web.Mvc
         {
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<TenantMiddleware>();
 
         }
         public static void UseSpecialRoute(this WebApplication app)

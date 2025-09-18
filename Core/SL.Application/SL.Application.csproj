@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Interfaces\" />
@@ -21,6 +22,7 @@
     <None Remove="Models\ViewModels\" />
     <None Remove="Models\ViewModels\Account\" />
     <None Remove="Interfaces\Services\" />
+    <None Remove="Middlewares\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -31,5 +33,9 @@
     <Folder Include="Models\ViewModels\" />
     <Folder Include="Models\ViewModels\Account\" />
     <Folder Include="Interfaces\Services\" />
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SL.Domain\SL.Domain.csproj" />
   </ItemGroup>
 </Project>
