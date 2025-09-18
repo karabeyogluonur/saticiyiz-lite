@@ -12,6 +12,7 @@ using SL.Domain;
 using SL.Domain.Entities;
 using SL.Persistence.Contexts;
 using Microsoft.Extensions.Options;
+using AutoMapper;
 
 namespace SL.Persistence.Services
 {
@@ -20,12 +21,14 @@ namespace SL.Persistence.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IMapper _mapper;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signInManager)
+        public AuthService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signInManager, IMapper mapper)
 		{
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _signInManager = signInManager;
+            _mapper = mapper;
 		}
 
         public async Task<Result<string>> LoginAsync(string email, string password, bool rememberMe)
@@ -63,17 +66,10 @@ namespace SL.Persistence.Services
 
         public async Task RegisterAsync(RegisterViewModel registerViewModel, string tenantDatabaseName)
         {
-            var user = new ApplicationUser
-            {
-                UserName = registerViewModel.Email,
-                Email = registerViewModel.Email,
-                FirstName = registerViewModel.FirstName,
-                LastName = registerViewModel.LastName,
-                PhoneNumber = registerViewModel.Phone,
-                TenantDatabaseName = tenantDatabaseName
-            };
+            ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(registerViewModel);
+            applicationUser.TenantDatabaseName = tenantDatabaseName;
 
-            await _userManager.CreateAsync(user, registerViewModel.Password); 
+            await _userManager.CreateAsync(applicationUser, registerViewModel.Password); 
         }
     }
 

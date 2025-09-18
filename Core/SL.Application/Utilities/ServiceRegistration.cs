@@ -16,6 +16,9 @@ namespace SL.Application.Utilities
                 x.RegisterValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
             });
             ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("tr-TR");
+
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
     }
 }

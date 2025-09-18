@@ -15,6 +15,7 @@
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Interfaces\" />
@@ -28,6 +29,7 @@
     <None Remove="Middlewares\" />
     <None Remove="Validators\" />
     <None Remove="Validators\Account\" />
+    <None Remove="Mappers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -41,6 +43,7 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Validators\" />
     <Folder Include="Validators\Account\" />
+    <Folder Include="Mappers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SL.Domain\SL.Domain.csproj" />
