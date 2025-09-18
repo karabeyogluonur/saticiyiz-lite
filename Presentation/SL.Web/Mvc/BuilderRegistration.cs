@@ -1,4 +1,5 @@
 ﻿using System;
+using SL.Persistence.Seeds;
 namespace SL.Web.Mvc
 {
     public static class BuilderRegistration
@@ -35,6 +36,10 @@ namespace SL.Web.Mvc
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+        }
+        public static void DatabaseSeed(this WebApplication app)
+        {
+            DbInitializer.Initialize(app);
         }
     }
 }

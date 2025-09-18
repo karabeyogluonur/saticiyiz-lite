@@ -8,6 +8,7 @@ builder.Services.AddLayerServices();
 var app = builder.Build();
 
 // Add middlewares
+app.DatabaseSeed();
 app.AddDevelopmentBuilder();
 app.AddBaseBuilder();
 app.AddRouteBuilder();
