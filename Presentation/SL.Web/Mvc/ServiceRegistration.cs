@@ -1,4 +1,8 @@
-﻿using SL.Application.Utilities;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using SL.Application.Utilities;
+using SL.Domain.Defaults;
+using SL.Domain.Enums;
 using SL.Infrastructre.Utilities;
 using SL.Persistence.Utilities;
 
@@ -16,6 +20,25 @@ namespace SL.Web.Mvc
             services.AddPersistenceService();
             services.AddInfrastructreService();
 
+        }
+        public static void AddAuthServices(this IServiceCollection services)
+        {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyNames.RequireUserRole, policy =>
+                policy.RequireRole(AppRoleEnum.User.ToString(), AppRoleEnum.Admin.ToString()));
+
+                options.AddPolicy(PolicyNames.RequireAdminRole, policy =>
+                    policy.RequireRole(AppRoleEnum.Admin.ToString()));
+            });
         }
     }
 }

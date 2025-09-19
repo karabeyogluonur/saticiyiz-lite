@@ -13,6 +13,7 @@ using SL.Domain.Entities;
 using SL.Persistence.Contexts;
 using Microsoft.Extensions.Options;
 using AutoMapper;
+using SL.Domain.Enums;
 
 namespace SL.Persistence.Services
 {
@@ -69,7 +70,8 @@ namespace SL.Persistence.Services
             ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(registerViewModel);
             applicationUser.TenantDatabaseName = tenantDatabaseName;
 
-            await _userManager.CreateAsync(applicationUser, registerViewModel.Password); 
+            await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
+            await _userManager.AddToRoleAsync(applicationUser, AppRoleEnum.User.ToString());
         }
     }
 

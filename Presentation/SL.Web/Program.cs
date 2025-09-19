@@ -9,14 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddBaseServices();
 builder.Services.AddLayerServices();
+builder.Services.AddAuthServices();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout"; 
-        options.AccessDeniedPath = "/Account/AccessDenied"; 
-    });
+
 
 
 var app = builder.Build();
