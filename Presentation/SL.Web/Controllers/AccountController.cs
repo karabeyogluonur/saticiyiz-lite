@@ -19,8 +19,6 @@ public class AccountController : BasePublicController
     private readonly IAuthService _authService;
     private readonly ITenantDatabaseService _tenantDatabaseService;
     private readonly IUnitOfWork<TenantDbContext> _unitOfWork;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly UserManager<ApplicationUser> _userManager;
 
     public AccountController(IAuthService authService, ITenantDatabaseService tenantDatabaseService,IUnitOfWork<TenantDbContext> unitOfWork)
     {
