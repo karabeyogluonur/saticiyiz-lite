@@ -7,7 +7,7 @@ using SL.Web.Mvc.Controllers;
 namespace SL.Web.Areas.Dashboard.Controller
 {
     [Area(AreaNames.CUSTOMER)]
-    [Authorize(Policy = PolicyNames.RequireUserRole)]
+    [Authorize(Policy = PolicyNames.REQUIRE_USER_ROLE)]
 
     public class BaseDashboardController : BaseController
     {

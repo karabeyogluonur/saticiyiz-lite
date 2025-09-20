@@ -7,7 +7,7 @@ using SL.Web.Mvc.Controllers;
 namespace SL.Web.Areas.Admin.Controller
 {
     [Area(AreaNames.ADMIN)]
-    [Authorize(Policy = PolicyNames.RequireAdminRole)]
+    [Authorize(Policy = PolicyNames.REQUIRE_ADMIN_ROLE)]
     public class BaseAdminController : BaseController
     {
         public BaseAdminController()
