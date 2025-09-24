@@ -29,7 +29,7 @@ namespace SL.Persistence.Seeds
         {
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            foreach (var roleName in Enum.GetNames(typeof(AppRoleEnum)))
+            foreach (var roleName in Enum.GetNames(typeof(AppRole)))
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
                 {
@@ -56,7 +56,7 @@ namespace SL.Persistence.Seeds
             ApplicationUser adminUser = new ApplicationUser { UserName = defaultAdminEmail, Email = defaultAdminEmail, FirstName = "Root", LastName = "Root", TenantDatabaseName = tenantDatabaseName };
 
             await userManager.CreateAsync(adminUser, defaultAdminPassword);
-            await userManager.AddToRoleAsync(adminUser, AppRoleEnum.Admin.ToString());
+            await userManager.AddToRoleAsync(adminUser, AppRole.Admin.ToString());
             await tenantDatabaseService.CreateDatabaseAsync(tenantDatabaseName);
 
         }

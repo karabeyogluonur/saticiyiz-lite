@@ -71,7 +71,7 @@ namespace SL.Persistence.Services
             applicationUser.TenantDatabaseName = tenantDatabaseName;
 
             await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
-            await _userManager.AddToRoleAsync(applicationUser, AppRoleEnum.User.ToString());
+            await _userManager.AddToRoleAsync(applicationUser, AppRole.User.ToString());
         }
     }
 

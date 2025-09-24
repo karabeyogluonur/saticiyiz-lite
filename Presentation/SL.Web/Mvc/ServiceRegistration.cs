@@ -33,11 +33,11 @@ namespace SL.Web.Mvc
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(PolicyNames.REQUIRE_USER_ROLE, policy =>
-                policy.RequireRole(AppRoleEnum.User.ToString(), AppRoleEnum.Admin.ToString()));
+                options.AddPolicy(PolicyName.RequireUserRole, policy =>
+                policy.RequireRole(AppRole.User.ToString(), AppRole.Admin.ToString()));
 
-                options.AddPolicy(PolicyNames.REQUIRE_ADMIN_ROLE, policy =>
-                    policy.RequireRole(AppRoleEnum.Admin.ToString()));
+                options.AddPolicy(PolicyName.RequireAdminRole, policy =>
+                    policy.RequireRole(AppRole.Admin.ToString()));
             });
         }
     }
