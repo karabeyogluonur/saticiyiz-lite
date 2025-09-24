@@ -40,9 +40,9 @@ namespace SL.Web.Mvc
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
         }
-        public static void DatabaseSeed(this WebApplication app)
+        public async static Task DatabaseSeed(this WebApplication app)
         {
-            DbInitializer.Initialize(app);
+            await DbInitializer.InitializeAsync(app);
         }
     }
 }

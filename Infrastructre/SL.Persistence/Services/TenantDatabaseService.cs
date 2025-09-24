@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using SL.Application.Interfaces.Services;
 using SL.Persistence.Contexts;
+using SL.Persistence.Utilities;
 
 namespace SL.Persistence.Services
 {
@@ -10,14 +11,14 @@ namespace SL.Persistence.Services
     {
         public async Task CreateDatabaseAsync(string tenantDatabaseName)
         {
-                using var conn = new NpgsqlConnection("Host=localhost;Database=postgres;Username=postgres;Password=postgres");
+                using var conn = new NpgsqlConnection(Configuration.PostgresConnectionString);
                 await conn.OpenAsync();
 
                 using var cmd = new NpgsqlCommand($"CREATE DATABASE \"{tenantDatabaseName}\"", conn);
                 await cmd.ExecuteNonQueryAsync();
 
                 var tenantOptions = new DbContextOptionsBuilder<TenantDbContext>()
-                    .UseNpgsql($"Host=localhost;Database={tenantDatabaseName};Username=postgres;Password=postgres")
+                    .UseNpgsql(Configuration.TenantConnectionString(tenantDatabaseName))
                     .Options;
 
                 using var tenantDb = new TenantDbContext(tenantOptions);

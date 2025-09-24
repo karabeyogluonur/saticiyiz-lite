@@ -11,7 +11,7 @@ namespace SL.Persistence.Seeds
 {
     public static class DbInitializer
     {
-        public async static void Initialize(IApplicationBuilder app)
+        public async static Task InitializeAsync(IApplicationBuilder app)
         {
             var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetService<MasterDbContext>();
@@ -19,7 +19,8 @@ namespace SL.Persistence.Seeds
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
 
-            context.Database.Migrate();
+
+            await context.Database.MigrateAsync();
             await SeedRolesAsync(scope);
             await SeedDefaultAdminAsync(scope);
         }

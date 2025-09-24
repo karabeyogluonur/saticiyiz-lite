@@ -24,6 +24,21 @@ namespace SL.Persistence.Utilities
             }
 
         }
+        public static string PostgresConnectionString
+        {
+
+            get
+            {
+                return ConfigurationManager.GetConnectionString("PostgresConnection");
+            }
+
+        }
+        public static string TenantConnectionString(string tenantDatabaseName)
+        {
+
+            return ConfigurationManager.GetConnectionString("TenantConnection").Replace("{tenantDatabaseName}", tenantDatabaseName);
+
+        }
     }
 }
 
