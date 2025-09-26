@@ -18,19 +18,19 @@ using SL.Domain.Enums;
 namespace SL.Persistence.Services
 {
     public class AuthService : IAuthService
-	{
+    {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
 
         public AuthService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signInManager, IMapper mapper)
-		{
+        {
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _signInManager = signInManager;
             _mapper = mapper;
-		}
+        }
 
         public async Task<Result<string>> LoginAsync(string email, string password, bool rememberMe)
         {
@@ -49,7 +49,7 @@ namespace SL.Persistence.Services
             if (!result.Succeeded)
                 return Result<string>.Failure("Geçersiz e-posta veya şifre.");
 
-            return Result<string>.Success(user.TenantDatabaseName ?? string.Empty);
+            return Result<string>.Success(string.Empty);
         }
 
         public async Task<Result<bool>> LogoutAsync()
@@ -64,18 +64,9 @@ namespace SL.Persistence.Services
                 return Result<bool>.Failure($"Çıkış yapılırken hata oluştu: {ex.Message}");
             }
         }
-
-        public async Task RegisterAsync(RegisterViewModel registerViewModel, string tenantDatabaseName)
-        {
-            ApplicationUser applicationUser = _mapper.Map<ApplicationUser>(registerViewModel);
-            applicationUser.TenantDatabaseName = tenantDatabaseName;
-
-            await _userManager.CreateAsync(applicationUser, registerViewModel.Password);
-            await _userManager.AddToRoleAsync(applicationUser, AppRole.User.ToString());
-        }
     }
 
-    public class AppClaimsPrincipalFactory: UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
+    public class AppClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>
     {
         public AppClaimsPrincipalFactory(
             UserManager<ApplicationUser> userManager,
@@ -85,11 +76,12 @@ namespace SL.Persistence.Services
 
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUser user)
         {
+
             var identity = await base.GenerateClaimsAsync(user);
 
-            if (!string.IsNullOrEmpty(user.TenantDatabaseName))
+            if (user.TenantId != Guid.Empty)
             {
-                identity.AddClaim(new Claim("TenantDatabaseName", user.TenantDatabaseName));
+                identity.AddClaim(new Claim("TenantId", user.TenantId.ToString()));
             }
 
             return identity;

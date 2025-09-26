@@ -30,7 +30,9 @@ namespace SL.Persistence.Utilities
             .AddDefaultTokenProviders();
 
             services.AddTransient<IAuthService, AuthService>();
-            services.AddTransient<ITenantDatabaseService, TenantDatabaseService>();
+            services.AddTransient<ITenantService, TenantService>();
+            services.AddTransient<IRegistrationWorkflowService, RegistrationWorkflowService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 

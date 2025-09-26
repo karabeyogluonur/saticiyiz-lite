@@ -6,6 +6,7 @@ using Npgsql;
 using SL.Application.Framework;
 using SL.Application.Interfaces.Repositories.UnitOfWork;
 using SL.Application.Interfaces.Services;
+using SL.Application.Models.DTOs.Tenant;
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain;
 using SL.Domain.Entities;
@@ -17,14 +18,11 @@ public class AccountController : BasePublicController
 {
 
     private readonly IAuthService _authService;
-    private readonly ITenantDatabaseService _tenantDatabaseService;
-    private readonly IUnitOfWork<TenantDbContext> _unitOfWork;
-
-    public AccountController(IAuthService authService, ITenantDatabaseService tenantDatabaseService,IUnitOfWork<TenantDbContext> unitOfWork)
+    private readonly IRegistrationWorkflowService _registrationWorkflowService;
+    public AccountController(IAuthService authService, IRegistrationWorkflowService registrationWorkflowService)
     {
         _authService = authService;
-        _tenantDatabaseService = tenantDatabaseService;
-        _unitOfWork = unitOfWork;
+        _registrationWorkflowService = registrationWorkflowService;
     }
 
     [HttpGet]
@@ -37,22 +35,25 @@ public class AccountController : BasePublicController
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
         if (!ModelState.IsValid)
-            return View();
+            return View(registerViewModel);
 
-        string tenantDatabaseName = $"SL_{Guid.NewGuid():N}";
-
-        await _authService.RegisterAsync(registerViewModel, tenantDatabaseName);
-
-        await _tenantDatabaseService.CreateDatabaseAsync(tenantDatabaseName);
-
-        return RedirectToAction("Login");
+        try
+        {
+            await _registrationWorkflowService.ExecuteRegistrationAsync(registerViewModel);
+            return RedirectToAction("Login");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, "Kayıt işlemi başarısız oldu. Lütfen tekrar deneyin.");
+            return View(registerViewModel);
+        }
     }
 
     [HttpGet]
     public async Task<IActionResult> Login(string returnUrl = null)
     {
         if (User.Identity.IsAuthenticated)
-            return LocalRedirect(returnUrl ?? Url.Action("Index", "Home", new { area = AreaNames.CUSTOMER}));
+            return LocalRedirect(returnUrl ?? Url.Action("Index", "Home", new { area = AreaNames.CUSTOMER }));
 
         ViewData["ReturnUrl"] = returnUrl;
         return View();
@@ -63,12 +64,11 @@ public class AccountController : BasePublicController
     {
         returnUrl ??= Url.Content($"~/{AreaNames.CUSTOMER}");
 
-        Result<string> result = await _authService.LoginAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe);
+        Result result = await _authService.LoginAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe);
+        
         if (result.IsSuccess)
-        {
-            _unitOfWork.ChangeDatabase($"Host=localhost;Port=5432;Database={result.Value};Username=postgres;Password=postgres");
             return LocalRedirect(returnUrl);
-        }
+            
         else
         {
             ModelState.AddModelError(string.Empty, result.ErrorMessage);

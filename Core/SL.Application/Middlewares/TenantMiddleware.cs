@@ -5,6 +5,7 @@ using SL.Domain.Entities;
 using System.Net.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using SL.Application.Interfaces.Services;
 
 namespace SL.Application.Middlewares
 {
@@ -17,19 +18,19 @@ namespace SL.Application.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        // Bağımlılıklar artık InvokeAsync içinde değil, Constructor'da veya 
+        // aşağıda gösterildiği gibi GetRequiredService ile alınabilir.
+        public async Task InvokeAsync(HttpContext context, ITenantService tenantService)
         {
             if (context.User.Identity?.IsAuthenticated == true)
             {
-                var tenantDatabaseName = context.User.Claims
-                    .FirstOrDefault(c => c.Type == "TenantDatabaseName")?.Value;
+                var tenantIdClaim = context.User.Claims
+                    .FirstOrDefault(c => c.Type == "TenantId")?.Value;
 
-                if (!string.IsNullOrEmpty(tenantDatabaseName))
-                {
-                    var tenantConnStr = $"Host=localhost;Database={tenantDatabaseName};Username=postgres;Password=postgres";
-                    unitOfWork.ChangeDatabase(tenantConnStr);
-                }
+                if (Guid.TryParse(tenantIdClaim, out Guid tenantId))
+                    await tenantService.SetTenantContext(tenantId);
             }
+
             await _next(context);
         }
     }
