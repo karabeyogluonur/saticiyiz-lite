@@ -1,11 +1,11 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity;
-using SL.Application.Interfaces.Repositories.UnitOfWork;
-using SL.Domain.Entities;
 using System.Net.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using SL.Application.Interfaces.Repositories.UnitOfWork;
 using SL.Application.Interfaces.Services;
+using SL.Domain.Entities;
 
 namespace SL.Application.Middlewares
 {

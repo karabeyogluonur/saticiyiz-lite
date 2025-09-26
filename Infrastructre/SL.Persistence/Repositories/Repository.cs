@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Linq.Expressions;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
 using SL.Application.Interfaces.Collections;
 using SL.Application.Interfaces.Repositories;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace SL.Persistence.Repositories
 {

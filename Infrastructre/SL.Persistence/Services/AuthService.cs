@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Npgsql;
 using SL.Application.Interfaces.Services;
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain;
 using SL.Domain.Entities;
-using SL.Persistence.Contexts;
-using Microsoft.Extensions.Options;
-using AutoMapper;
 using SL.Domain.Enums;
+using SL.Persistence.Contexts;
 
 namespace SL.Persistence.Services
 {
