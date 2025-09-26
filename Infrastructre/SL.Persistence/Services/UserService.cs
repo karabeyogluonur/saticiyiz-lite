@@ -21,7 +21,7 @@ namespace SL.Persistence.Services
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork<MasterDbContext> unitOfWork, IMapper mapper,UserManager<ApplicationUser> userManager)
+        public UserService(IUnitOfWork<MasterDbContext> unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
             _unitOfWork = unitOfWork;

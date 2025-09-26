@@ -15,7 +15,7 @@ namespace SL.Persistence.Utilities
     {
         public static void AddPersistenceService(this IServiceCollection services)
         {
-            services.AddDbContext<MasterDbContext>(options =>options.UseNpgsql(Configuration.MasterConnectionString)).AddUnitOfWork<MasterDbContext>();
+            services.AddDbContext<MasterDbContext>(options => options.UseNpgsql(Configuration.MasterConnectionString)).AddUnitOfWork<MasterDbContext>();
             services.AddDbContext<TenantDbContext>(options => options.UseNpgsql(Configuration.MasterConnectionString)).AddUnitOfWork<TenantDbContext>();
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>

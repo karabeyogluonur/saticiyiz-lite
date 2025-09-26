@@ -1,0 +1,49 @@
+# **********************************************
+# Genel Ayarlar
+# **********************************************
+root = true
+
+[*]
+# Dosya sonlarında boş satır zorunluluğu
+insert_final_newline = true
+# Boşluk yerine Tab kullanımı (Genellikle 4 boşluk tercih edilir)
+indent_style = space
+indent_size = 4
+# Satır sonu karakterleri
+end_of_line = crlf
+
+# **********************************************
+# C# Kod Stili ve Biçimlendirme Kuralları
+# **********************************************
+
+[*.cs]
+# 1. KOD BİÇİMLENDİRMESİ (FORMATTING)
+# Parantezleri (braces) yeni satıra taşır. (K&R/Allman stili yerine varsayılan Microsoft stili)
+csharp_new_line_before_open_brace = all
+# Parantezlerin içerisindeki if/else/for/while ifadelerinden önce boşluk bırakır.
+csharp_space_before_parentheses = false
+# C# anahtar kelimeleri yerine yerleşik (built-in) tür adlarını kullanmayı önerir (örn: 'string' yerine 'String')
+csharp_prefer_simple_using_statement = true
+# using direktiflerinin dosyanın kökünde yer almasını sağlar (Global using'den farklı olarak)
+csharp_using_directive_placement = outside_namespace
+
+# 2. ÜYELER VE İFADELER (MEMBERS AND EXPRESSIONS)
+# 'this.' kullanımını zorunlu tutar (Alan (field) ve değişken isimlerinin karışmasını önler)
+dotnet_style_qualification_for_field = true
+dotnet_style_qualification_for_property = true
+dotnet_style_qualification_for_method = false # Metotlar için 'this' opsiyonel kalsın.
+
+# 3. KOD TEMİZLİĞİ VE SADELEŞTİRME
+# 'var' yerine açık tür kullanımını önerir (Karmaşık LINQ ifadeleri dışında kodun okunurluğunu artırır)
+dotnet_style_var_for_built_in_types = false:suggestion
+dotnet_style_var_when_type_is_apparent = true:suggestion
+# Gereksiz atlamalar (cast) kaldırılmalı
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_none:suggestion
+# Null kontrolünde ??= operatörünü kullanmayı zorunlu kılar (C# 8.0+)
+csharp_style_coalesce_expression = true:suggestion
+
+# 4. USING DİREKTİFLERİ (IMPORTS)
+# Using'leri alfabetik sıraya koyar
+csharp_using_directives_placement = outside_namespace
+# Gereksiz using'leri kaldırır (Çok önemli temizlik kuralı)
+dotnet_separate_import_directive_groups = false

@@ -65,10 +65,10 @@ public class AccountController : BasePublicController
         returnUrl ??= Url.Content($"~/{AreaNames.CUSTOMER}");
 
         Result result = await _authService.LoginAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe);
-        
+
         if (result.IsSuccess)
             return LocalRedirect(returnUrl);
-            
+
         else
         {
             ModelState.AddModelError(string.Empty, result.ErrorMessage);

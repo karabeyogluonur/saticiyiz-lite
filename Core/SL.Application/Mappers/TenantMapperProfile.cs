@@ -6,10 +6,10 @@ using SL.Domain.Entities;
 
 namespace SL.Application.Mappers
 {
-	public class TenantMapperProfile : Profile
-	{
-		public TenantMapperProfile()
-		{
+    public class TenantMapperProfile : Profile
+    {
+        public TenantMapperProfile()
+        {
             CreateMap<TenantCreateModel, Tenant>();
         }
     }

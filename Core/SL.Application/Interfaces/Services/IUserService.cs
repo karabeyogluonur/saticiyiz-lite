@@ -10,7 +10,7 @@ namespace SL.Application.Interfaces.Services
         Task<ApplicationUser> CreateUserAsync(RegisterViewModel registerViewModel, Guid tenantId, AppRole appRole);
         Task<ApplicationUser> GetUserByIdAsync(Guid userId);
         Task<ApplicationUser> GetUserByTenantIdAsync(Guid tenantId);
-        Task<ApplicationUser?> FindUserByEmailAsync(string email); 
+        Task<ApplicationUser?> FindUserByEmailAsync(string email);
         Task DeleteUserByTenantIdAsync(Guid tenantId);
     }
 }

@@ -8,7 +8,7 @@ namespace SL.Application.Interfaces.Services
     public interface IAuthService
     {
         Task<Result<string>> LoginAsync(string email, string password, bool rememberMe);
-        Task<Result<bool>> LogoutAsync();   
+        Task<Result<bool>> LogoutAsync();
     }
 }
 

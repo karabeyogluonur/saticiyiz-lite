@@ -57,7 +57,7 @@ namespace SL.Persistence.Services
             }
 
             await databaseConnection.CloseAsync();
-            
+
 
         }
         public async Task DeleteTenantAsync(Guid tenantId)
@@ -79,7 +79,7 @@ namespace SL.Persistence.Services
         }
         public async Task SetTenantContext(Guid tenantId)
         {
-            Tenant tenant = await _tenantRepository.GetFirstOrDefaultAsync(predicate:tenant => tenant.Id == tenantId);
+            Tenant tenant = await _tenantRepository.GetFirstOrDefaultAsync(predicate: tenant => tenant.Id == tenantId);
             var tenantConnStr = $"Host=localhost;Database={tenant.DatabaseName};Username=postgres;Password=postgres";
             _tenantUnitOfWork.ChangeDatabase(tenantConnStr);
         }
