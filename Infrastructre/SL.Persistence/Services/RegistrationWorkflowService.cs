@@ -2,6 +2,7 @@
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 using SL.Application.Interfaces.Repositories;
 using SL.Application.Interfaces.Repositories.UnitOfWork;
@@ -22,12 +23,14 @@ namespace SL.Persistence.Services
         private readonly ITenantService _tenantService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public RegistrationWorkflowService(IAuthService authService, ITenantService tenantService, IUnitOfWork<TenantDbContext> unitOfWork, IUserService userService, IMapper mapper)
+        private readonly ILogger _logger;
+        public RegistrationWorkflowService(IAuthService authService, ITenantService tenantService, IUnitOfWork<TenantDbContext> unitOfWork, IUserService userService, IMapper mapper, ILogger logger)
         {
             _authService = authService;
             _tenantService = tenantService;
             _userService = userService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task ExecuteRegistrationAsync(RegisterViewModel registerViewModel)
@@ -46,10 +49,12 @@ namespace SL.Persistence.Services
             {
                 if (tenant != null)
                 {
+                    _logger.LogCritical(ex, "Kayıt iş akışı kritik altyapı hatası nedeniyle geri alınıyor. Tenant: {TenantId}", tenant.Id);
                     await _tenantService.DeleteTenantAsync(tenant.Id);
                     await _userService.DeleteUserByTenantIdAsync(tenant.Id);
                 }
-                throw;
+
+                throw new ApplicationException("Sistem hatası nedeniyle kayıt tamamlanamadı.", ex);
             }
         }
     }

@@ -1,43 +1,37 @@
-﻿using System;
-using System.Security.Claims;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Npgsql;
 using SL.Application.Interfaces.Services;
-using SL.Application.Models.ViewModels.Account;
 using SL.Domain;
 using SL.Domain.Entities;
 using SL.Domain.Enums;
-using SL.Persistence.Contexts;
+
 
 namespace SL.Persistence.Services
 {
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, SignInManager<ApplicationUser> signInManager, IMapper mapper)
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger logger)
         {
             _userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
             _signInManager = signInManager;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<Result<string>> LoginAsync(string email, string password, bool rememberMe)
+        public async Task<Result> LoginAsync(string email, string password, bool rememberMe)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                return Result<string>.Failure("Geçersiz e-posta veya şifre.");
+                return Result.Failure("Giriş bilgileri hatalı.", ErrorCode.AuthenticationFailed);
+
+            //if (!user.EmailConfirmed)
+            //return Result.Failure("E-posta adresinizi onaylamanız gerekmektedir.", ErrorCode.EmailNotConfirmed);
 
             var result = await _signInManager.PasswordSignInAsync(
                 user,
@@ -46,22 +40,38 @@ namespace SL.Persistence.Services
                 lockoutOnFailure: true
             );
 
-            if (!result.Succeeded)
-                return Result<string>.Failure("Geçersiz e-posta veya şifre.");
+            if (result.Succeeded)
+                return Result.Success();
 
-            return Result<string>.Success(string.Empty);
+            if (result.IsLockedOut)
+            {
+                string lockoutMessage = $"Hesabınız kilitlenmiştir. Lütfen {user.LockoutEnd?.ToLocalTime():g} zamanından sonra tekrar deneyin.";
+                _logger.LogWarning("Hesap kilitli: {Email}", email);
+
+                return Result.Failure(lockoutMessage, ErrorCode.AccountLocked);
+            }
+
+            if (result.IsNotAllowed)
+            {
+                _logger.LogWarning("Hesap, kısıtlamalar nedeniyle giriş yapamıyor: {Email}", email);
+                return Result.Failure("Giriş yapmanıza izin verilmiyor. Lütfen yöneticinize başvurun.", ErrorCode.AuthenticationFailed);
+            }
+
+            return Result.Failure("Giriş bilgileri hatalı.", ErrorCode.AuthenticationFailed);
         }
 
-        public async Task<Result<bool>> LogoutAsync()
+        public async Task<Result> LogoutAsync()
         {
             try
             {
                 await _signInManager.SignOutAsync();
-                return Result<bool>.Success(true);
+                return Result.Success();
             }
             catch (Exception ex)
             {
-                return Result<bool>.Failure($"Çıkış yapılırken hata oluştu: {ex.Message}");
+                // Çıkış yapamama, oturum yönetimi sorununu işaret eder.
+                _logger.LogError(ex, "Kullanıcı çıkış yaparken beklenmeyen bir hata oluştu.");
+                return Result.Failure("Çıkış işlemi sırasında sunucu hatası oluştu.", ErrorCode.InternalServerError);
             }
         }
     }
