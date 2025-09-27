@@ -1,13 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+﻿using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 using Serilog;
 using Serilog.Sinks.PostgreSQL;
 using Serilog.Sinks.PostgreSQL.ColumnWriters;
 using SL.Persistence.Contexts;
 using SL.Persistence.Seeds;
-using SL.Web.Mvc.Helpers;
 using SL.Web.Mvc.Middlewares;
 
 namespace SL.Web.Mvc
