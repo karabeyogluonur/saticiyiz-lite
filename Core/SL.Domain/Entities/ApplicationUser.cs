@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
-
 namespace SL.Domain.Entities
 {
     public class ApplicationUser : IdentityUser
@@ -11,4 +10,3 @@ namespace SL.Domain.Entities
         public Tenant Tenant { get; set; }
     }
 }
-

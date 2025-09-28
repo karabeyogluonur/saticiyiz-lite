@@ -2,7 +2,6 @@
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain;
 using SL.Domain.Entities;
-
 namespace SL.Application.Interfaces.Services
 {
     public interface IAuthService
@@ -11,4 +10,3 @@ namespace SL.Application.Interfaces.Services
         Task<Result> LogoutAsync();
     }
 }
-

@@ -7,4 +7,3 @@ namespace SL.Domain.Enums
         Admin
     }
 }
-

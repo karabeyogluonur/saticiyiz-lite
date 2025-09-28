@@ -6,4 +6,3 @@ namespace SL.Domain.Entities
         public Guid Id { get; set; } = new Guid();
     }
 }
-

@@ -11,4 +11,3 @@ namespace SL.Application.Models.ViewModels.Account
         public string ConfirmPassword { get; set; }
     }
 }
-

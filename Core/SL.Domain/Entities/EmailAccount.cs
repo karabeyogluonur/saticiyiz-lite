@@ -16,4 +16,3 @@ namespace SL.Domain.Entities
         public DateTime? DeletedAt { get; set; }
     }
 }
-

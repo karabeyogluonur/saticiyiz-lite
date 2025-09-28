@@ -1,13 +1,8 @@
 ﻿@{
     Layout = "_Root";
 }
-
-
-
 <div class="app-page  flex-column flex-column-fluid " id="kt_app_page">
-
     @{ await Html.RenderPartialAsync("_Header"); }
-
     <div class="app-wrapper  flex-column flex-row-fluid " id="kt_app_wrapper">
         <div class="app-main flex-column flex-row-fluid " id="kt_app_main">
             <div class="d-flex flex-column flex-column-fluid">
@@ -17,10 +12,7 @@
                     </div>
                 </div>
             </div>
-
             @{ await Html.RenderPartialAsync("_Footer"); }
-
-
         </div>
     </div>
 </div>

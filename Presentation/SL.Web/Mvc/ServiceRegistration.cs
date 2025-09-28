@@ -5,7 +5,6 @@ using SL.Domain.Defaults;
 using SL.Domain.Enums;
 using SL.Infrastructre.Utilities;
 using SL.Persistence.Utilities;
-
 namespace SL.Web.Mvc
 {
     public static class ServiceRegistration
@@ -19,7 +18,6 @@ namespace SL.Web.Mvc
             services.AddApplicationService();
             services.AddPersistenceService();
             services.AddInfrastructreService();
-
         }
         public static void AddAuthServices(this IServiceCollection services)
         {
@@ -30,16 +28,13 @@ namespace SL.Web.Mvc
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(PolicyName.RequireUserRole, policy =>
                 policy.RequireRole(AppRole.User.ToString(), AppRole.Admin.ToString()));
-
                 options.AddPolicy(PolicyName.RequireAdminRole, policy =>
                     policy.RequireRole(AppRole.Admin.ToString()));
             });
         }
     }
 }
-

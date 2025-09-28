@@ -6,4 +6,3 @@ namespace SL.Application.Models.DTOs.Tenant
         public string DatabaseName { get; set; }
     }
 }
-

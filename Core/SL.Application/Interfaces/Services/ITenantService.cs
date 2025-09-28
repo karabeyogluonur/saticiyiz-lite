@@ -11,4 +11,3 @@ namespace SL.Application.Interfaces.Services
         Task SetTenantContext(Guid tenantId);
     }
 }
-

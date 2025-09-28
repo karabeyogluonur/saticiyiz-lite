@@ -7,4 +7,3 @@ namespace SL.Domain.Defaults
         public const string RequireAdminRole = "Require.Admin.Role";
     }
 }
-

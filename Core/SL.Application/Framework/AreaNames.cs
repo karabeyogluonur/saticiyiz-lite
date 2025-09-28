@@ -7,4 +7,3 @@ namespace SL.Application.Framework
         public const string CUSTOMER = "Dashboard";
     }
 }
-

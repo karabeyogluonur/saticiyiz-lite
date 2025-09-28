@@ -14,4 +14,3 @@ namespace SL.Application.Interfaces.Services
         Task DeleteUserByTenantIdAsync(Guid tenantId);
     }
 }
-

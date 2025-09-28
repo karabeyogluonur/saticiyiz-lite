@@ -9,7 +9,6 @@ using SL.Application.Models.DTOs.Tenant;
 using SL.Domain.Entities;
 using SL.Persistence.Contexts;
 using SL.Persistence.Utilities;
-
 namespace SL.Persistence.Services
 {
     public class TenantService : ITenantService
@@ -29,16 +28,12 @@ namespace SL.Persistence.Services
         {
             using var databaseConnection = new NpgsqlConnection(Configuration.PostgresConnectionString);
             await databaseConnection.OpenAsync();
-
             using var databaseCreateCommand = new NpgsqlCommand($"CREATE DATABASE \"{tenant.DatabaseName}\"", databaseConnection);
             await databaseCreateCommand.ExecuteNonQueryAsync();
-
             await databaseConnection.CloseAsync();
-
             var tenantOptions = new DbContextOptionsBuilder<TenantDbContext>()
                 .UseNpgsql(Configuration.TenantConnectionString(tenant.DatabaseName))
                 .Options;
-
             using var tenantDb = new TenantDbContext(tenantOptions);
             tenantDb.Database.Migrate();
         }
@@ -46,27 +41,20 @@ namespace SL.Persistence.Services
         {
             using var databaseConnection = new NpgsqlConnection(Configuration.PostgresConnectionString);
             await databaseConnection.OpenAsync();
-
             using var databaseCheckCommand = new NpgsqlCommand($"SELECT COUNT(datname) FROM pg_database WHERE datname = {tenantDatabaseName}", databaseConnection);
             var result = await databaseCheckCommand.ExecuteScalarAsync();
-
             if (Convert.ToInt32(result) > 0)
             {
                 using var databaseDropCommand = new NpgsqlCommand($"DROP DATABASE \"{tenantDatabaseName}\"", databaseConnection);
                 await databaseDropCommand.ExecuteNonQueryAsync();
             }
-
             await databaseConnection.CloseAsync();
-
-
         }
         public async Task DeleteTenantAsync(Guid tenantId)
         {
             Tenant tenant = await _tenantRepository.GetFirstOrDefaultAsync(predicate: tenant => tenant.Id == tenantId);
-
             if (tenant is null)
                 return;
-
             _tenantRepository.Delete(tenant);
             await DropDatabaseAsync(tenant.DatabaseName);
         }
@@ -85,4 +73,3 @@ namespace SL.Persistence.Services
         }
     }
 }
-

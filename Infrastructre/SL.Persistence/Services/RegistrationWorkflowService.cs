@@ -1,4 +1,3 @@
-
 using System;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +12,6 @@ using SL.Domain;
 using SL.Domain.Entities;
 using SL.Domain.Enums;
 using SL.Persistence.Contexts;
-
-
 namespace SL.Persistence.Services
 {
     public class RegistrationWorkflowService : IRegistrationWorkflowService
@@ -32,7 +29,6 @@ namespace SL.Persistence.Services
             _mapper = mapper;
             _logger = logger;
         }
-
         public async Task ExecuteRegistrationAsync(RegisterViewModel registerViewModel)
         {
             Tenant tenant = null;
@@ -41,7 +37,6 @@ namespace SL.Persistence.Services
             {
                 var tenantCreateModel = new TenantCreateModel { DatabaseName = newDatabaseName };
                 tenant = await _tenantService.InsertTenantAsync(tenantCreateModel);
-
                 await _userService.CreateUserAsync(registerViewModel, tenant.Id, AppRole.User);
                 await _tenantService.CreateDatabaseAsync(tenant);
             }
@@ -53,11 +48,8 @@ namespace SL.Persistence.Services
                     await _tenantService.DeleteTenantAsync(tenant.Id);
                     await _userService.DeleteUserByTenantIdAsync(tenant.Id);
                 }
-
                 throw new ApplicationException("Sistem hatası nedeniyle kayıt tamamlanamadı.", ex);
             }
         }
     }
-
 }
-

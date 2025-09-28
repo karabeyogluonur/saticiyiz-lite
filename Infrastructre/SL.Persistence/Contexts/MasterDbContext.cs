@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SL.Domain.Entities;
-
 namespace SL.Persistence.Contexts
 {
     public class MasterDbContext : IdentityDbContext<ApplicationUser>
@@ -10,7 +9,6 @@ namespace SL.Persistence.Contexts
         public MasterDbContext(DbContextOptions<MasterDbContext> options) : base(options) { }
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<EmailAccount> EmailAccounts { get; set; }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -22,7 +20,5 @@ namespace SL.Persistence.Contexts
             builder.Entity<Tenant>().HasKey(t => t.Id);
             builder.Entity<EmailAccount>().HasQueryFilter(e => !e.IsDeleted);
         }
-
     }
 }
-

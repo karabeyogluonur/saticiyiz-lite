@@ -1,5 +1,4 @@
 using System;
-
 namespace SL.Application.Models.Request;
 
 public class DataTablesRequest

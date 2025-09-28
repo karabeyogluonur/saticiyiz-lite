@@ -2,7 +2,6 @@
     Layout = "_Root";
 }
 @model SL.Application.Models.ViewModels.Account.RegisterViewModel
-
 <div class="d-flex flex-column flex-lg-row flex-column-fluid">
     <!--begin::Body-->
     <div class="d-flex flex-column flex-lg-row-fluid w-lg-50 p-10 order-2 order-lg-1">
@@ -25,7 +24,6 @@
                     <!--begin::Separator-->
                     <div class="separator separator-content my-14"></div>
                     <!--end::Separator-->
-
                     <div class="row mb-8">
                         <!--begin::Col-->
                         <div class="col-md-6 fv-row">
@@ -46,14 +44,12 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                         <!--end::Email-->
                     </div>
-
                     <div class="fv-row mb-8">
                         <!--begin::Email-->
                         <input type="text" placeholder="Telefon" name="phone" asp-for="Phone" autocomplete="on" class="form-control bg-transparent" />
                         <span asp-validation-for="Phone" class="text-danger"></span>
                         <!--end::Email-->
                     </div>
-
                     <!--begin::Input group-->
                     <div class="fv-row mb-8" data-kt-password-meter="true">
                         <!--begin::Wrapper-->
@@ -95,7 +91,6 @@
                         <label class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" name="toc" value="1" />
                             <span class="form-check-label fw-semibold text-gray-700 fs-base ms-1">
-
                                 <a href="#" class="ms-1 link-primary">Sözleşme ve koşulları</a>
                                 okudum, onaylıyorum.
                             </span>
@@ -119,7 +114,6 @@
                     <!--end::Submit button-->
                     <!--begin::Sign up-->
                     <div class="text-gray-500 text-center fw-semibold fs-6">
-
                         <a asp-action="Login" asp-controller="Account" class="text-gray-500 text-center fw-semibold fs-6">Zaten hesabınız var mı?</a>
                     </div>
                     <!--end::Sign up-->

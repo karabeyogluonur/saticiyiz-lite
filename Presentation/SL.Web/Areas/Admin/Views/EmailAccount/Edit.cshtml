@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "E-posta Hesabını Düzenle";
 }
-
 <div class="card mb-5">
     <div class="card-body">
         <div class="d-flex flex-wrap flex-stack">
@@ -39,7 +38,6 @@
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="Id" />
             <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-
             <div class="row">
                 <div class="col-md-6 fv-row mb-4">
                     <label asp-for="DisplayName" class="required form-label fs-7 fw-semibold"></label>
@@ -53,7 +51,6 @@
                     <span asp-validation-for="Email" class="fv-plugins-message-container invalid-feedback fs-8"></span>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-6 fv-row mb-4">
                     <label asp-for="Host" class="required form-label fs-7 fw-semibold"></label>
@@ -66,10 +63,8 @@
                     <span asp-validation-for="Port" class="fv-plugins-message-container invalid-feedback fs-8"></span>
                 </div>
             </div>
-
             <div class="separator separator-dashed my-6"></div>
             <h3 class="fs-5 fw-bold mb-5">Kimlik Bilgileri</h3>
-
             <div class="fv-row mb-3">
                 <label class="form-check form-switch form-check-custom form-check-solid">
                     <input class="form-check-input" type="checkbox" asp-for="UseDefaultCredentials"
@@ -78,7 +73,6 @@
                                                 model.UseDefaultCredentials)</span>
                 </label>
             </div>
-
             <div id="credentialsSection">
                 <div class="fv-row mb-4">
                     <label asp-for="Username" class="form-label fs-7 fw-semibold"></label>
@@ -86,7 +80,6 @@
                     <span asp-validation-for="Username"
                         class="fv-plugins-message-container invalid-feedback fs-8"></span>
                 </div>
-
                 <div class="fv-row mb-4">
                     <label asp-for="Password" class="form-label fs-7 fw-semibold"></label>
                     <input asp-for="Password" type="password" class="form-control form-control-sm"
@@ -95,14 +88,12 @@
                         class="fv-plugins-message-container invalid-feedback fs-8"></span>
                 </div>
             </div>
-
             <div class="fv-row mb-7">
                 <label class="form-check form-switch form-check-custom form-check-solid">
                     <input class="form-check-input" type="checkbox" asp-for="EnableSsl" />
                     <span class="form-check-label fs-7">@Html.DisplayNameFor(model => model.EnableSsl)</span>
                 </label>
             </div>
-
             <div class="d-flex justify-content-end">
                 <a asp-action="List" class="btn btn-sm btn-light me-3">İptal</a>
                 <button type="submit" id="email_account_submit_btn" class="btn btn-sm btn-primary">
@@ -117,34 +108,22 @@
 @section Scripts {
     <script type="text/javascript">
         "use strict";
-
-        // Edit sayfası için FormValidation yöneticisi
         var EmailAccountEditFormManager = function () {
-            // Private variables
             let form;
             let submitButton;
             let validator;
             let useDefaultCheck;
             let credentialsSection;
-
-            // Hem görünürlüğü hem de doğrulamayı yöneten merkezi fonksiyon
             const toggleCredentialFields = function () {
                 if (useDefaultCheck.checked) {
-                    // Checkbox seçiliyse, bölümü GİZLE ve doğrulama kuralını PASİF yap
                     credentialsSection.style.display = 'none';
                     validator.disableValidator('Username', 'notEmpty');
                 } else {
-                    // Checkbox seçili değilse, bölümü GÖSTER ve doğrulama kuralını AKTİF yap
                     credentialsSection.style.display = 'block';
                     validator.enableValidator('Username', 'notEmpty');
-
-                    // Kural aktif edildikten sonra, hata mesajının anında
-                    // gösterilmesi veya gizlenmesi için alanı yeniden doğrula.
                     validator.revalidateField('Username');
                 }
             };
-
-            // Private functions
             const initValidation = function () {
                 validator = FormValidation.formValidation(
                     form,
@@ -154,7 +133,6 @@
                             'Email': { validators: { notEmpty: { message: 'E-posta adresi zorunludur.' }, emailAddress: { message: 'Geçerli bir e-posta adresi giriniz.' }, stringLength: { max: 250, message: 'E-posta adresi en fazla 250 karakter olabilir.' } } },
                             'Host': { validators: { notEmpty: { message: 'Sunucu (Host) adresi zorunludur.' }, stringLength: { max: 250, message: 'Sunucu adresi en fazla 250 karakter olabilir.' } } },
                             'Port': { validators: { notEmpty: { message: 'Port numarası zorunludur.' }, between: { min: 1, max: 65535, message: 'Port numarası 1 ile 65535 arasında olmalıdır.' } } },
-
                             'Username': {
                                 validators: {
                                     notEmpty: {
@@ -173,14 +151,12 @@
                 );
                 handleConditionalValidation();
             };
-
             const handleConditionalValidation = function () {
                 toggleCredentialFields(); // Sayfa ilk yüklendiğinde doğru durumu ayarla
                 useDefaultCheck.addEventListener('change', function () {
                     toggleCredentialFields(); // Checkbox her değiştiğinde durumu tekrar ayarla
                 });
             }
-
             const handleSubmit = function () {
                 submitButton.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -201,24 +177,18 @@
                     });
                 });
             };
-
-            // Public methods
             return {
                 init: function () {
                     form = document.querySelector('#email_account_edit_form');
                     submitButton = document.querySelector('#email_account_submit_btn');
                     useDefaultCheck = document.querySelector('#useDefaultCheck');
                     credentialsSection = document.querySelector('#credentialsSection');
-
                     if (!form || !credentialsSection) { return; }
-
                     initValidation();
                     handleSubmit();
                 }
             };
         }();
-
-        // On document ready
         KTUtil.onDOMContentLoaded(function () {
             EmailAccountEditFormManager.init();
         });

@@ -8,7 +8,6 @@ using SL.Application.Models.ViewModels.Account;
 using SL.Domain.Entities;
 using SL.Domain.Enums;
 using SL.Persistence.Contexts;
-
 namespace SL.Persistence.Seeds
 {
     public static class DbInitializer
@@ -17,21 +16,16 @@ namespace SL.Persistence.Seeds
         {
             var scope = app.ApplicationServices.CreateScope();
             var context = scope.ServiceProvider.GetService<MasterDbContext>();
-
             if (context == null)
                 throw new ArgumentNullException(nameof(context));
-
-
             await context.Database.MigrateAsync();
             await SeedRolesAsync(scope);
             await SeedDefaultAdminAsync(scope);
             await SeedDefaultEmailAccountAsync(scope);
         }
-
         public static async Task SeedRolesAsync(IServiceScope serviceScope)
         {
             var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
             foreach (var roleName in Enum.GetNames(typeof(AppRole)))
             {
                 if (!await roleManager.RoleExistsAsync(roleName))
@@ -41,28 +35,20 @@ namespace SL.Persistence.Seeds
                 }
             }
         }
-
         public static async Task SeedDefaultAdminAsync(IServiceScope serviceScope)
         {
             IUserService userService = serviceScope.ServiceProvider.GetRequiredService<IUserService>();
             ITenantService tenantService = serviceScope.ServiceProvider.GetRequiredService<ITenantService>();
-
             string defaultAdminEmail = "root@root.com";
             string defaultAdminPassword = "Nbr169++";
-
             ApplicationUser? existingAdmin = await userService.FindUserByEmailAsync(defaultAdminEmail);
-
             if (existingAdmin != null) return;
-
             string tenantDatabaseName = $"SL_{Guid.NewGuid():N}";
-
             TenantCreateModel tenantCreateModel = new TenantCreateModel
             {
                 DatabaseName = tenantDatabaseName,
             };
-
             Tenant rootTenant = await tenantService.InsertTenantAsync(tenantCreateModel);
-
             RegisterViewModel adminRegisterModel = new RegisterViewModel
             {
                 Email = defaultAdminEmail,
@@ -70,27 +56,20 @@ namespace SL.Persistence.Seeds
                 FirstName = "Onur",
                 LastName = "Karabeyoğlu"
             };
-
             ApplicationUser adminUser = await userService.CreateUserAsync(
                 adminRegisterModel,
                 rootTenant.Id,
                 AppRole.Admin);
-
             await tenantService.CreateDatabaseAsync(rootTenant);
-
             Console.WriteLine($"Default Admin created: {defaultAdminEmail}");
         }
-
         public static async Task SeedDefaultEmailAccountAsync(IServiceScope serviceScope)
         {
             var context = serviceScope.ServiceProvider.GetRequiredService<MasterDbContext>();
             var passwordHasher = serviceScope.ServiceProvider.GetRequiredService<IPasswordHasherService>();
-
             string defaultEmail = "noreply@saticiyiz.com";
-
             if (await context.EmailAccounts.AnyAsync(e => e.Email == defaultEmail))
                 return;
-
             var defaultAccount = new EmailAccount
             {
                 Id = Guid.NewGuid(),
@@ -105,14 +84,9 @@ namespace SL.Persistence.Seeds
                 CreatedAt = DateTime.UtcNow,
                 IsDeleted = false
             };
-
             await context.EmailAccounts.AddAsync(defaultAccount);
             await context.SaveChangesAsync();
-
             Console.WriteLine($"Default Email Account created: {defaultEmail}");
         }
-
     }
 }
-
-

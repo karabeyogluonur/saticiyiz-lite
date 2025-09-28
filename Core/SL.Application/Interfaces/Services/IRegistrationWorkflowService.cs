@@ -10,4 +10,3 @@ namespace SL.Application.Interfaces.Services
         Task ExecuteRegistrationAsync(RegisterViewModel registerViewModel);
     }
 }
-

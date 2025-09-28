@@ -1,5 +1,4 @@
 using System;
-
 namespace SL.Application.Interfaces.Services;
 
 public interface IPasswordHasherService

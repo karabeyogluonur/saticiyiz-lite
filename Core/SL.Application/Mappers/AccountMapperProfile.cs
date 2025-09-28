@@ -2,7 +2,6 @@
 using AutoMapper;
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain.Entities;
-
 namespace SL.Application.Mappers
 {
     public class AccountMapperProfile : Profile
@@ -19,4 +18,3 @@ namespace SL.Application.Mappers
         }
     }
 }
-

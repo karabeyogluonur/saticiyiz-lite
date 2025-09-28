@@ -8,4 +8,3 @@ namespace SL.Application.Models.ViewModels.Account
         public bool RememberMe { get; set; } = true;
     }
 }
-
