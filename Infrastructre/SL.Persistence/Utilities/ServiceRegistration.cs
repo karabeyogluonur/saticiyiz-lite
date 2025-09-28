@@ -33,6 +33,7 @@ namespace SL.Persistence.Utilities
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IRegistrationWorkflowService, RegistrationWorkflowService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEmailAccountService, EmailAccountService>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
 

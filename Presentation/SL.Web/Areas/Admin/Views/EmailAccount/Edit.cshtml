@@ -1,0 +1,226 @@
+﻿@model EmailAccountEditViewModel
+@{
+    ViewData["Title"] = "E-posta Hesabını Düzenle";
+}
+
+<div class="card mb-5">
+    <div class="card-body">
+        <div class="d-flex flex-wrap flex-stack">
+            <div class="d-flex flex-column justify-content-center flex-wrap me-3">
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">E-posta
+                    Hesabını Düzenle</h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                    <li class="breadcrumb-item text-muted">
+                        <a asp-area="Admin" asp-controller="Home" asp-action="Index"
+                            class="text-muted text-hover-primary">Anasayfa</a>
+                    </li>
+                    <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                    <li class="breadcrumb-item text-muted">
+                        <a asp-area="Admin" asp-controller="EmailAccount" asp-action="Index"
+                            class="text-muted text-hover-primary">E-posta Hesapları</a>
+                    </li>
+                    <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                    <li class="breadcrumb-item text-dark">Düzenle</li>
+                </ul>
+            </div>
+            <div class="d-flex align-items-center py-1">
+                <a asp-area="Admin" asp-controller="EmailAccount" asp-action="List"
+                    class="btn btn-sm btn-light-primary">
+                    <i class="ki-duotone ki-arrow-left fs-3"><span class="path1"></span><span class="path2"></span></i>
+                    Listeye Geri Dön
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <form id="email_account_edit_form" asp-action="Edit" asp-controller="EmailAccount" method="post" class="form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="row">
+                <div class="col-md-6 fv-row mb-4">
+                    <label asp-for="DisplayName" class="required form-label fs-7 fw-semibold"></label>
+                    <input asp-for="DisplayName" class="form-control form-control-sm" />
+                    <span asp-validation-for="DisplayName"
+                        class="fv-plugins-message-container invalid-feedback fs-8"></span>
+                </div>
+                <div class="col-md-6 fv-row mb-4">
+                    <label asp-for="Email" class="required form-label fs-7 fw-semibold"></label>
+                    <input asp-for="Email" type="email" class="form-control form-control-sm" />
+                    <span asp-validation-for="Email" class="fv-plugins-message-container invalid-feedback fs-8"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 fv-row mb-4">
+                    <label asp-for="Host" class="required form-label fs-7 fw-semibold"></label>
+                    <input asp-for="Host" class="form-control form-control-sm" />
+                    <span asp-validation-for="Host" class="fv-plugins-message-container invalid-feedback fs-8"></span>
+                </div>
+                <div class="col-md-6 fv-row mb-4">
+                    <label asp-for="Port" class="required form-label fs-7 fw-semibold"></label>
+                    <input asp-for="Port" type="number" class="form-control form-control-sm" />
+                    <span asp-validation-for="Port" class="fv-plugins-message-container invalid-feedback fs-8"></span>
+                </div>
+            </div>
+
+            <div class="separator separator-dashed my-6"></div>
+            <h3 class="fs-5 fw-bold mb-5">Kimlik Bilgileri</h3>
+
+            <div class="fv-row mb-3">
+                <label class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input" type="checkbox" asp-for="UseDefaultCredentials"
+                        id="useDefaultCheck" />
+                    <span class="form-check-label fs-7">@Html.DisplayNameFor(model =>
+                                                model.UseDefaultCredentials)</span>
+                </label>
+            </div>
+
+            <div id="credentialsSection">
+                <div class="fv-row mb-4">
+                    <label asp-for="Username" class="form-label fs-7 fw-semibold"></label>
+                    <input asp-for="Username" class="form-control form-control-sm" autocomplete="off" />
+                    <span asp-validation-for="Username"
+                        class="fv-plugins-message-container invalid-feedback fs-8"></span>
+                </div>
+
+                <div class="fv-row mb-4">
+                    <label asp-for="Password" class="form-label fs-7 fw-semibold"></label>
+                    <input asp-for="Password" type="password" class="form-control form-control-sm"
+                        autocomplete="new-password" />
+                    <span asp-validation-for="Password"
+                        class="fv-plugins-message-container invalid-feedback fs-8"></span>
+                </div>
+            </div>
+
+            <div class="fv-row mb-7">
+                <label class="form-check form-switch form-check-custom form-check-solid">
+                    <input class="form-check-input" type="checkbox" asp-for="EnableSsl" />
+                    <span class="form-check-label fs-7">@Html.DisplayNameFor(model => model.EnableSsl)</span>
+                </label>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a asp-action="List" class="btn btn-sm btn-light me-3">İptal</a>
+                <button type="submit" id="email_account_submit_btn" class="btn btn-sm btn-primary">
+                    <span class="indicator-label">Değişiklikleri Kaydet</span>
+                    <span class="indicator-progress">Lütfen bekleyin... <span
+                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        "use strict";
+
+        // Edit sayfası için FormValidation yöneticisi
+        var EmailAccountEditFormManager = function () {
+            // Private variables
+            let form;
+            let submitButton;
+            let validator;
+            let useDefaultCheck;
+            let credentialsSection;
+
+            // Hem görünürlüğü hem de doğrulamayı yöneten merkezi fonksiyon
+            const toggleCredentialFields = function () {
+                if (useDefaultCheck.checked) {
+                    // Checkbox seçiliyse, bölümü GİZLE ve doğrulama kuralını PASİF yap
+                    credentialsSection.style.display = 'none';
+                    validator.disableValidator('Username', 'notEmpty');
+                } else {
+                    // Checkbox seçili değilse, bölümü GÖSTER ve doğrulama kuralını AKTİF yap
+                    credentialsSection.style.display = 'block';
+                    validator.enableValidator('Username', 'notEmpty');
+
+                    // Kural aktif edildikten sonra, hata mesajının anında
+                    // gösterilmesi veya gizlenmesi için alanı yeniden doğrula.
+                    validator.revalidateField('Username');
+                }
+            };
+
+            // Private functions
+            const initValidation = function () {
+                validator = FormValidation.formValidation(
+                    form,
+                    {
+                        fields: {
+                            'DisplayName': { validators: { notEmpty: { message: 'Görünen Ad zorunludur.' }, stringLength: { max: 250, message: 'Görünen Ad en fazla 250 karakter olabilir.' } } },
+                            'Email': { validators: { notEmpty: { message: 'E-posta adresi zorunludur.' }, emailAddress: { message: 'Geçerli bir e-posta adresi giriniz.' }, stringLength: { max: 250, message: 'E-posta adresi en fazla 250 karakter olabilir.' } } },
+                            'Host': { validators: { notEmpty: { message: 'Sunucu (Host) adresi zorunludur.' }, stringLength: { max: 250, message: 'Sunucu adresi en fazla 250 karakter olabilir.' } } },
+                            'Port': { validators: { notEmpty: { message: 'Port numarası zorunludur.' }, between: { min: 1, max: 65535, message: 'Port numarası 1 ile 65535 arasında olmalıdır.' } } },
+
+                            'Username': {
+                                validators: {
+                                    notEmpty: {
+                                        enabled: false,
+                                        message: 'Kullanıcı Adı zorunladır.'
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            bootstrap: new FormValidation.plugins.Bootstrap5({ rowSelector: '.fv-row', eleInvalidClass: '', eleValidClass: '' }),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                        }
+                    }
+                );
+                handleConditionalValidation();
+            };
+
+            const handleConditionalValidation = function () {
+                toggleCredentialFields(); // Sayfa ilk yüklendiğinde doğru durumu ayarla
+                useDefaultCheck.addEventListener('change', function () {
+                    toggleCredentialFields(); // Checkbox her değiştiğinde durumu tekrar ayarla
+                });
+            }
+
+            const handleSubmit = function () {
+                submitButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    validator.validate().then(function (status) {
+                        if (status == 'Valid') {
+                            submitButton.setAttribute('data-kt-indicator', 'on');
+                            submitButton.disabled = true;
+                            form.submit();
+                        } else {
+                            Swal.fire({
+                                text: "Formda eksik veya hatalı alanlar var, lütfen kontrol edin.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Tamam",
+                                customClass: { confirmButton: "btn btn-primary" }
+                            });
+                        }
+                    });
+                });
+            };
+
+            // Public methods
+            return {
+                init: function () {
+                    form = document.querySelector('#email_account_edit_form');
+                    submitButton = document.querySelector('#email_account_submit_btn');
+                    useDefaultCheck = document.querySelector('#useDefaultCheck');
+                    credentialsSection = document.querySelector('#credentialsSection');
+
+                    if (!form || !credentialsSection) { return; }
+
+                    initValidation();
+                    handleSubmit();
+                }
+            };
+        }();
+
+        // On document ready
+        KTUtil.onDOMContentLoaded(function () {
+            EmailAccountEditFormManager.init();
+        });
+    </script>
+}

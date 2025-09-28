@@ -1,51 +1,49 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-    <PackageReference Include="FluentValidation" Version="12.0.0" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="9.0.9"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0"/>
+    <PackageReference Include="FluentValidation" Version="12.0.0"/>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0"/>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Interfaces\" />
-    <None Remove="Interfaces\Repositories\" />
-    <None Remove="Interfaces\Collections\" />
-    <None Remove="Interfaces\Repositories\UnitOfWork\" />
-    <None Remove="Models\" />
-    <None Remove="Models\ViewModels\" />
-    <None Remove="Models\ViewModels\Account\" />
-    <None Remove="Interfaces\Services\" />
-    <None Remove="Middlewares\" />
-    <None Remove="Validators\" />
-    <None Remove="Validators\Account\" />
-    <None Remove="Mappers\" />
+    <None Remove="Interfaces\"/>
+    <None Remove="Interfaces\Repositories\"/>
+    <None Remove="Interfaces\Collections\"/>
+    <None Remove="Interfaces\Repositories\UnitOfWork\"/>
+    <None Remove="Models\"/>
+    <None Remove="Models\ViewModels\"/>
+    <None Remove="Models\ViewModels\Account\"/>
+    <None Remove="Interfaces\Services\"/>
+    <None Remove="Middlewares\"/>
+    <None Remove="Validators\"/>
+    <None Remove="Validators\Account\"/>
+    <None Remove="Mappers\"/>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Interfaces\Repositories\" />
-    <Folder Include="Interfaces\Collections\" />
-    <Folder Include="Interfaces\Repositories\UnitOfWork\" />
-    <Folder Include="Models\" />
-    <Folder Include="Models\ViewModels\" />
-    <Folder Include="Models\ViewModels\Account\" />
-    <Folder Include="Interfaces\Services\" />
-    <Folder Include="Middlewares\" />
-    <Folder Include="Validators\" />
-    <Folder Include="Validators\Account\" />
-    <Folder Include="Mappers\" />
+    <Folder Include="Interfaces\"/>
+    <Folder Include="Interfaces\Repositories\"/>
+    <Folder Include="Interfaces\Collections\"/>
+    <Folder Include="Interfaces\Repositories\UnitOfWork\"/>
+    <Folder Include="Models\"/>
+    <Folder Include="Models\ViewModels\"/>
+    <Folder Include="Models\ViewModels\Account\"/>
+    <Folder Include="Interfaces\Services\"/>
+    <Folder Include="Middlewares\"/>
+    <Folder Include="Validators\"/>
+    <Folder Include="Validators\Account\"/>
+    <Folder Include="Mappers\"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SL.Domain\SL.Domain.csproj" />
+    <ProjectReference Include="..\SL.Domain\SL.Domain.csproj"/>
   </ItemGroup>
 </Project>

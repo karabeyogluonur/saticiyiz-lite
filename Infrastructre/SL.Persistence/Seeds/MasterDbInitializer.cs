@@ -25,6 +25,7 @@ namespace SL.Persistence.Seeds
             await context.Database.MigrateAsync();
             await SeedRolesAsync(scope);
             await SeedDefaultAdminAsync(scope);
+            await SeedDefaultEmailAccountAsync(scope);
         }
 
         public static async Task SeedRolesAsync(IServiceScope serviceScope)
@@ -78,6 +79,37 @@ namespace SL.Persistence.Seeds
             await tenantService.CreateDatabaseAsync(rootTenant);
 
             Console.WriteLine($"Default Admin created: {defaultAdminEmail}");
+        }
+
+        public static async Task SeedDefaultEmailAccountAsync(IServiceScope serviceScope)
+        {
+            var context = serviceScope.ServiceProvider.GetRequiredService<MasterDbContext>();
+            var passwordHasher = serviceScope.ServiceProvider.GetRequiredService<IPasswordHasherService>();
+
+            string defaultEmail = "noreply@saticiyiz.com";
+
+            if (await context.EmailAccounts.AnyAsync(e => e.Email == defaultEmail))
+                return;
+
+            var defaultAccount = new EmailAccount
+            {
+                Id = Guid.NewGuid(),
+                DisplayName = "Sistem Bildirim Hesabı",
+                Email = defaultEmail,
+                Username = defaultEmail,
+                Password = passwordHasher.HashPassword("DefaultStrongPassword123!"),
+                Host = "smtp.saticiyiz.com",
+                Port = 587,
+                EnableSsl = true,
+                UseDefaultCredentials = false,
+                CreatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            await context.EmailAccounts.AddAsync(defaultAccount);
+            await context.SaveChangesAsync();
+
+            Console.WriteLine($"Default Email Account created: {defaultEmail}");
         }
 
     }
