@@ -50,8 +50,16 @@ public class EmailAccountController : BaseAdminController
     {
         if (!ModelState.IsValid)
             return View(emailAccountCreateViewModel);
-        await _emailAccountService.CreateEmailAccountAsync(emailAccountCreateViewModel);
-        return RedirectToAction("L");
+
+        var result = await _emailAccountService.CreateEmailAccountAsync(emailAccountCreateViewModel);
+
+        if (result.IsSuccess)
+            return RedirectToAction(nameof(List));
+        else
+        {
+            ModelState.AddModelError(string.Empty, result.ErrorMessage);
+            return View(emailAccountCreateViewModel);
+        }
     }
     [HttpGet]
     public async Task<IActionResult> Edit(Guid id)

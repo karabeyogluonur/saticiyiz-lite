@@ -113,7 +113,7 @@
             let submitButton;
             let validator;
             let useDefaultCheck;
-            let credentialsSection; // <-- credentialsSection için değişken eklendi
+            let credentialsSection;
             const toggleCredentialFields = function () {
                 if (useDefaultCheck.checked) {
                     credentialsSection.style.display = 'none';
@@ -195,7 +195,7 @@
                     form = document.querySelector('#email_account_create_form');
                     submitButton = document.querySelector('#email_account_submit_btn');
                     useDefaultCheck = document.querySelector('#useDefaultCheck');
-                    credentialsSection = document.querySelector('#credentialsSection'); // <-- div'i değişkene ata
+                    credentialsSection = document.querySelector('#credentialsSection');
                     if (!form || !credentialsSection) {
                         return;
                     }
