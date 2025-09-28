@@ -1,43 +1,83 @@
-# **********************************************
-# Genel Ayarlar
-# **********************************************
+# Top-level EditorConfig
 root = true
+
+############################################################
+# General settings
+############################################################
 [*]
-# Dosya sonlarında boş satır zorunluluğu
+charset = utf-8
+end_of_line = lf
 insert_final_newline = true
-# Boşluk yerine Tab kullanımı (Genellikle 4 boşluk tercih edilir)
+trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
-# Satır sonu karakterleri
-end_of_line = crlf
-# **********************************************
-# C# Kod Stili ve Biçimlendirme Kuralları
-# **********************************************
+tab_width = 4
+max_line_length = 120
+
+############################################################
+# C# specific settings
+############################################################
 [*.cs]
-# 1. KOD BİÇİMLENDİRMESİ (FORMATTING)
-# Parantezleri (braces) yeni satıra taşır. (K&R/Allman stili yerine varsayılan Microsoft stili)
-csharp_new_line_before_open_brace = all
-# Parantezlerin içerisindeki if/else/for/while ifadelerinden önce boşluk bırakır.
-csharp_space_before_parentheses = false
-# C# anahtar kelimeleri yerine yerleşik (built-in) tür adlarını kullanmayı önerir (örn: 'string' yerine 'String')
-csharp_prefer_simple_using_statement = true
-# using direktiflerinin dosyanın kökünde yer almasını sağlar (Global using'den farklı olarak)
-csharp_using_directive_placement = outside_namespace
-# 2. ÜYELER VE İFADELER (MEMBERS AND EXPRESSIONS)
-# 'this.' kullanımını zorunlu tutar (Alan (field) ve değişken isimlerinin karışmasını önler)
-dotnet_style_qualification_for_field = true
-dotnet_style_qualification_for_property = true
-dotnet_style_qualification_for_method = false # Metotlar için 'this' opsiyonel kalsın.
-# 3. KOD TEMİZLİĞİ VE SADELEŞTİRME
-# 'var' yerine açık tür kullanımını önerir (Karmaşık LINQ ifadeleri dışında kodun okunurluğunu artırır)
-dotnet_style_var_for_built_in_types = false:suggestion
+
+# Use spaces, 4 per indent
+indent_style = space
+indent_size = 4
+
+# Encoding
+charset = utf-8
+
+# Line endings
+end_of_line = lf
+
+# Require final newline
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Naming conventions
+dotnet_naming_rule.interface_should_start_with_i.symbols = interfaces
+dotnet_naming_rule.interface_should_start_with_i.style = prefix_i
+dotnet_naming_rule.interface_should_start_with_i.severity = warning
+
+dotnet_naming_symbols.interfaces.applicable_kinds = interface
+dotnet_naming_style.prefix_i.capitalization = pascal_case
+dotnet_naming_style.prefix_i.required_prefix = I
+
+# Use var when obvious
+dotnet_style_var_for_built_in_types = true:suggestion
 dotnet_style_var_when_type_is_apparent = true:suggestion
-# Gereksiz atlamalar (cast) kaldırılmalı
-dotnet_style_parentheses_in_arithmetic_binary_operators = always_none:suggestion
-# Null kontrolünde ??= operatörünü kullanmayı zorunlu kılar (C# 8.0+)
-csharp_style_coalesce_expression = true:suggestion
-# 4. USING DİREKTİFLERİ (IMPORTS)
-# Using'leri alfabetik sıraya koyar
-csharp_using_directives_placement = outside_namespace
-# Gereksiz using'leri kaldırır (Çok önemli temizlik kuralı)
-dotnet_separate_import_directive_groups = false
+dotnet_style_var_elsewhere = false:suggestion
+
+# Expression-bodied members
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+
+# File layout
+csharp_new_line_before_open_brace = all
+
+# Prefer explicit tuple names
+csharp_style_explicit_tuple_names = true:suggestion
+
+# Prefer switch expressions
+csharp_style_prefer_switch_expression = true:suggestion
+
+# Naming styles
+dotnet_naming_rule.private_members_underscore_prefix.symbols = private_fields
+dotnet_naming_rule.private_members_underscore_prefix.style = underscore_prefix
+dotnet_naming_rule.private_members_underscore_prefix.severity = suggestion
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_style.underscore_prefix.required_prefix = _
+dotnet_naming_style.underscore_prefix.capitalization = camel_case
+
+# Code quality analyzers
+dotnet_diagnostic.CA1822.severity = warning   # Mark members as static
+dotnet_diagnostic.CA1305.severity = warning   # Specify IFormatProvider
+dotnet_diagnostic.CA1062.severity = warning   # Validate arguments of public methods
+
+# IDE formatting rules
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_after_colon_in_inheritance_clause = true
