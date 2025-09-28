@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SL.Application.Interfaces.Repositories;
 using SL.Application.Interfaces.Repositories.UnitOfWork;
@@ -59,6 +58,11 @@ public class EmailAccountService : IEmailAccountService
             return Result.Failure("Silme işlemi sırasında beklenmedik bir sunucu hatası oluştu.", ErrorCode.InternalServerError);
         }
     }
+    public async Task<IEnumerable<EmailAccount>> GetAllAsync()
+    {
+        return await _emailAccountRepository.GetAllAsync();
+    }
+
     public async Task<Result<EmailAccountEditViewModel>> GetEmailAccountForEditAsync(Guid id)
     {
         EmailAccount accountEntity = await _emailAccountRepository.FindAsync(id);

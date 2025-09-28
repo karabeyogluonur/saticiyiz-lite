@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SL.Application.Interfaces.Services;
 using SL.Application.Models.DTOs.Tenant;
 using SL.Application.Models.ViewModels.Account;
+using SL.Domain.Defaults;
 using SL.Domain.Entities;
 using SL.Domain.Enums;
 using SL.Persistence.Contexts;
@@ -22,6 +23,7 @@ namespace SL.Persistence.Seeds
             await SeedRolesAsync(scope);
             await SeedDefaultAdminAsync(scope);
             await SeedDefaultEmailAccountAsync(scope);
+            await SeedEmailTemplatesAsync(scope);
         }
         public static async Task SeedRolesAsync(IServiceScope serviceScope)
         {
@@ -87,6 +89,69 @@ namespace SL.Persistence.Seeds
             await context.EmailAccounts.AddAsync(defaultAccount);
             await context.SaveChangesAsync();
             Console.WriteLine($"Default Email Account created: {defaultEmail}");
+        }
+        public static async Task SeedEmailTemplatesAsync(IServiceScope serviceScope)
+        {
+            var context = serviceScope.ServiceProvider.GetRequiredService<MasterDbContext>();
+
+            var systemName = MessageTemplateSystemName.CustomerWelcome;
+
+            if (await context.EmailTemplates.AnyAsync(t => t.SystemName == systemName))
+                return;
+
+            EmailAccount defaultEmailAccount = await context.EmailAccounts.FirstOrDefaultAsync(e => e.Email == "noreply@saticiyiz.com");
+
+            if (defaultEmailAccount == null)
+            {
+                Console.WriteLine($"Warning: Default sender email 'noreply@sirket.com' not found. Skipping seed for '{systemName}'.");
+                return;
+            }
+
+            EmailTemplate newTemplate = new EmailTemplate
+            {
+                Id = Guid.NewGuid(),
+                Name = "Müşteri Hoş Geldin Mesajı",
+                SystemName = systemName,
+                Subject = "Hoşgeldin! | Satıcıyız",
+                Body = @"
+            <!DOCTYPE html>
+            <html lang=""tr"">
+            <head>
+                <meta charset=""UTF-8"">
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+                    .header { font-size: 24px; font-weight: bold; color: #444; margin-bottom: 20px; }
+                    .footer { margin-top: 20px; font-size: 12px; color: #888; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class=""container"">
+                    <div class=""header""> aramıza Hoş Geldiniz!</div>
+                    <p>Merhaba {{ApplicationUser.FullName}},</p>
+                    <p> aramıza katıldığınız için çok mutluyuz. Hesabınız başarıyla oluşturuldu. Aşağıdaki linki kullanarak platformumuza giriş yapabilir ve tüm özelliklerimizi keşfetmeye başlayabilirsiniz.</p>
+                    <p style=""text-align: center; margin: 30px 0;"">
+                        <a href=""{{LoginLink}}"" style=""background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;"">Hesabınıza Giriş Yapın</a>
+                    </p>
+                    <p>İyi günler dileriz,<br/><strong>{{Store.Name}} Ekibi</strong></p>
+                    <div class=""footer"">
+                        Bu e-posta, saticiyiz.com'a üye olduğunuz için otomatik olarak gönderilmiştir.
+                    </div>
+                </div>
+            </body>
+            </html>
+        ",
+                BccEmailAddresses = null,
+                IsActive = true,
+                EmailAccountId = defaultEmailAccount.Id,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+            };
+
+            await context.EmailTemplates.AddAsync(newTemplate);
+            await context.SaveChangesAsync();
+
+            Console.WriteLine($"Email Template seeded: {systemName}");
         }
     }
 }

@@ -12,4 +12,5 @@ public interface IEmailAccountService
     Task<Result> UpdateEmailAccountAsync(EmailAccountEditViewModel emailAccountEditViewModel);
     Task<Result> DeleteEmailAccountAsync(Guid emailAccountId);
     Task<Result<EmailAccountEditViewModel>> GetEmailAccountForEditAsync(Guid id);
+    Task<IEnumerable<EmailAccount>> GetAllAsync();
 }

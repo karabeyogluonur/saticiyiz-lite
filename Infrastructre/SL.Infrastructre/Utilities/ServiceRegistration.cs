@@ -9,6 +9,8 @@ namespace SL.Infrastructre.Utilities
         public static void AddInfrastructreService(this IServiceCollection services)
         {
             services.AddSingleton<IPasswordHasherService, BCryptPasswordHasherService>();
+            services.AddScoped<ITokenizerService, TokenizerService>();
+            services.AddScoped<IMessageTokenProvider, CustomerTokenProvider>();
         }
     }
 }

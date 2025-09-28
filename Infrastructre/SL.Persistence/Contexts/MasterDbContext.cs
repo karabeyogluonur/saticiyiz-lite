@@ -9,6 +9,7 @@ namespace SL.Persistence.Contexts
         public MasterDbContext(DbContextOptions<MasterDbContext> options) : base(options) { }
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<EmailAccount> EmailAccounts { get; set; }
+        public DbSet<EmailTemplate> EmailTemplates { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
