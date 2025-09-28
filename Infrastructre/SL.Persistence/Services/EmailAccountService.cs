@@ -18,23 +18,27 @@ public class EmailAccountService : IEmailAccountService
     private readonly IUnitOfWork<MasterDbContext> _masterUnitOfWork;
     private readonly IRepository<EmailAccount> _emailAccountRepository;
     private readonly IMapper _mapper;
-    private readonly IPasswordHasherService _passwordHasherService;
+    private readonly IDataProtectionService _dataProtectionService;
     private readonly ILogger<EmailAccountService> _logger;
-    public EmailAccountService(IUnitOfWork<MasterDbContext> masterUnitOfWork, IMapper mapper, IPasswordHasherService passwordHasherService, ILogger<EmailAccountService> logger)
+    public EmailAccountService(IUnitOfWork<MasterDbContext> masterUnitOfWork, IMapper mapper, IPasswordHasherService passwordHasherService, ILogger<EmailAccountService> logger, IDataProtectionService dataProtectionService)
     {
         _masterUnitOfWork = masterUnitOfWork;
         _emailAccountRepository = _masterUnitOfWork.GetRepository<EmailAccount>();
         _mapper = mapper;
-        _passwordHasherService = passwordHasherService;
+        _dataProtectionService = dataProtectionService;
     }
     public async Task<Result> CreateEmailAccountAsync(EmailAccountAddViewModel emailAccountAddViewModel)
     {
         var emailExists = await _emailAccountRepository.ExistsAsync(emailAccount => emailAccount.Email.ToLower() == emailAccountAddViewModel.Email.ToLower());
+
         if (emailExists)
             return Result.Failure("Bu e-posta adresi zaten kullanılıyor.", ErrorCode.ValidationFailure);
+
         EmailAccount emailAccount = _mapper.Map<EmailAccount>(emailAccountAddViewModel);
+
         if (!string.IsNullOrWhiteSpace(emailAccountAddViewModel.Password))
-            emailAccount.Password = _passwordHasherService.HashPassword(emailAccountAddViewModel.Password);
+            emailAccount.Password = _dataProtectionService.Encrypt(emailAccountAddViewModel.Password);
+
         await _emailAccountRepository.InsertAsync(emailAccount);
         await _masterUnitOfWork.SaveChangesAsync();
         return Result.Success();
@@ -106,7 +110,7 @@ public class EmailAccountService : IEmailAccountService
                 return Result.Failure("Güncellenecek e-posta hesabı bulunamadı.", ErrorCode.None);
             _mapper.Map(emailAccountEditViewModel, existingAccount);
             if (!string.IsNullOrWhiteSpace(emailAccountEditViewModel.Password))
-                existingAccount.Password = _passwordHasherService.HashPassword(emailAccountEditViewModel.Password);
+                existingAccount.Password = _dataProtectionService.Encrypt(emailAccountEditViewModel.Password);
             await _masterUnitOfWork.SaveChangesAsync();
             return Result.Success();
         }

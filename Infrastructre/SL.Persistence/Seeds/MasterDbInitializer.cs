@@ -68,7 +68,7 @@ namespace SL.Persistence.Seeds
         public static async Task SeedDefaultEmailAccountAsync(IServiceScope serviceScope)
         {
             var context = serviceScope.ServiceProvider.GetRequiredService<MasterDbContext>();
-            var passwordHasher = serviceScope.ServiceProvider.GetRequiredService<IPasswordHasherService>();
+            var dataProtectionService = serviceScope.ServiceProvider.GetRequiredService<IDataProtectionService>();
             string defaultEmail = "noreply@saticiyiz.com";
             if (await context.EmailAccounts.AnyAsync(e => e.Email == defaultEmail))
                 return;
@@ -78,7 +78,7 @@ namespace SL.Persistence.Seeds
                 DisplayName = "Sistem Bildirim Hesabı",
                 Email = defaultEmail,
                 Username = defaultEmail,
-                Password = passwordHasher.HashPassword("DefaultStrongPassword123!"),
+                Password = dataProtectionService.Encrypt("@default@password"),
                 Host = "smtp.saticiyiz.com",
                 Port = 587,
                 EnableSsl = true,
