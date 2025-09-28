@@ -23,8 +23,8 @@ namespace SL.Persistence.Services
         private readonly ITenantService _tenantService;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly ILogger _logger;
-        public RegistrationWorkflowService(IAuthService authService, ITenantService tenantService, IUnitOfWork<TenantDbContext> unitOfWork, IUserService userService, IMapper mapper, ILogger logger)
+        private readonly ILogger<RegistrationWorkflowService> _logger;
+        public RegistrationWorkflowService(IAuthService authService, ITenantService tenantService, IUnitOfWork<TenantDbContext> unitOfWork, IUserService userService, IMapper mapper, ILogger<RegistrationWorkflowService> logger)
         {
             _authService = authService;
             _tenantService = tenantService;

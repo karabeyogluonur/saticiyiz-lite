@@ -1,17 +1,12 @@
-using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
-using SL.Application.Interfaces.Repositories;
 using SL.Application.Interfaces.Repositories.UnitOfWork;
 using SL.Application.Interfaces.Services;
-using SL.Application.Models.DTOs.Tenant;
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain.Entities;
 using SL.Domain.Enums;
 using SL.Persistence.Contexts;
-using SL.Persistence.Utilities;
 
 namespace SL.Persistence.Services
 {
