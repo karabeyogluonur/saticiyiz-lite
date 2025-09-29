@@ -10,6 +10,7 @@ namespace SL.Application.Interfaces.Services.Membership
         Task<ApplicationUser> GetUserByIdAsync(Guid userId);
         Task<ApplicationUser> GetUserByTenantIdAsync(Guid tenantId);
         Task<ApplicationUser?> FindUserByEmailAsync(string email);
+        Task<Guid?> GetUserIdByEmailAsync(string email);
         Task DeleteUserByTenantIdAsync(Guid tenantId);
     }
 }

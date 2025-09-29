@@ -1,7 +1,10 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SL.Application.Defaults.Caching;
+using SL.Application.Interfaces.Repositories;
 using SL.Application.Interfaces.Repositories.UnitOfWork;
+using SL.Application.Interfaces.Services.Caching;
 using SL.Application.Interfaces.Services.Membership;
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain.Entities.Membership;
@@ -15,11 +18,13 @@ namespace SL.Persistence.Services.Membership
         private readonly IUnitOfWork<MasterDbContext> _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork<MasterDbContext> unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager)
+        private readonly ICacheManager _cacheManager;
+        public UserService(IUnitOfWork<MasterDbContext> unitOfWork, IMapper mapper, UserManager<ApplicationUser> userManager, ICacheManager cacheManager)
         {
             _userManager = userManager;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _cacheManager = cacheManager;
         }
         public async Task<ApplicationUser> CreateUserAsync(RegisterViewModel registerViewModel, Guid tenantId, AppRole appRole)
         {
@@ -41,11 +46,32 @@ namespace SL.Persistence.Services.Membership
         }
         public async Task<ApplicationUser> GetUserByIdAsync(Guid userId)
         {
-            return await _userManager.FindByIdAsync(userId.ToString());
+            var cacheKey = UserCacheDefaults.ByIdCacheKey(userId);
+
+            return await _cacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _userManager.FindByIdAsync(userId.ToString());
+            });
         }
         public async Task<ApplicationUser> GetUserByTenantIdAsync(Guid tenantId)
         {
             return await _userManager.Users.FirstOrDefaultAsync(user => user.TenantId == tenantId);
+        }
+
+        public async Task<Guid?> GetUserIdByEmailAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
+
+            var normalizedEmail = email.ToUpperInvariant();
+            var cacheKey = UserCacheDefaults.IdByEmailCacheKey(normalizedEmail);
+
+            return await _cacheManager.GetAsync(cacheKey, async () =>
+            {
+                var user = await _userManager.FindByEmailAsync(normalizedEmail);
+                return Guid.Parse(user?.Id);
+            });
+
         }
     }
 }

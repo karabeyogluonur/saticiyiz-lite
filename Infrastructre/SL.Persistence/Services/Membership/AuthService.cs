@@ -13,37 +13,55 @@ namespace SL.Persistence.Services.Membership
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUserService _userService;
         private readonly ILogger<AuthService> _logger;
-        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AuthService> logger)
+        public AuthService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AuthService> logger, IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
             _logger = logger;
         }
         public async Task<Result> LoginAsync(string email, string password, bool rememberMe)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
+            _logger.LogInformation("'{Email}' adresi için giriş denemesi başladı.", email);
+
+            var userId = await _userService.GetUserIdByEmailAsync(email);
+            if (userId is null)
+            {
+                _logger.LogWarning("Giriş başarısız. Sistemde bulunamayan e-posta: {Email}", email);
                 return Result.Failure("Giriş bilgileri hatalı.", ErrorCode.AuthenticationFailed);
-            var result = await _signInManager.PasswordSignInAsync(
-                user,
-                password,
-                rememberMe,
-                lockoutOnFailure: true
-            );
+            }
+
+            var user = await _userService.GetUserByIdAsync(userId.Value);
+            if (user is null)
+            {
+                _logger.LogError("Kritik Hata: ID'si ({UserId}) bulunan kullanıcının nesnesi Master veritabanında bulunamadı.", userId.Value);
+                return Result.Failure("Sistemsel bir hata oluştu. Lütfen yönetici ile iletişime geçin.", ErrorCode.InternalServerError);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, password, rememberMe, lockoutOnFailure: true);
+
             if (result.Succeeded)
+            {
+                _logger.LogInformation("Giriş başarılı. Kullanıcı: {Email}, TenantId: {TenantId}", user.Email, user.TenantId);
                 return Result.Success();
+            }
+
             if (result.IsLockedOut)
             {
                 string lockoutMessage = $"Hesabınız kilitlenmiştir. Lütfen {user.LockoutEnd?.ToLocalTime():g} zamanından sonra tekrar deneyin.";
-                _logger.LogWarning("Hesap kilitli: {Email}", email);
+                _logger.LogWarning("Hesap kilitlendi: {Email}", user.Email);
                 return Result.Failure(lockoutMessage, ErrorCode.AccountLocked);
             }
+
             if (result.IsNotAllowed)
             {
-                _logger.LogWarning("Hesap, kısıtlamalar nedeniyle giriş yapamıyor: {Email}", email);
-                return Result.Failure("Giriş yapmanıza izin verilmiyor. Lütfen yöneticinize başvurun.", ErrorCode.AuthenticationFailed);
+                _logger.LogWarning("Giriş engellendi (IsNotAllowed): {Email}", user.Email);
+                return Result.Failure("Bu hesapla giriş yapmaya izniniz bulunmamaktadır.", ErrorCode.AuthenticationFailed);
             }
+
+            _logger.LogWarning("Hatalı şifre denemesi: {Email}", user.Email);
             return Result.Failure("Giriş bilgileri hatalı.", ErrorCode.AuthenticationFailed);
         }
         public async Task<Result> LogoutAsync()
