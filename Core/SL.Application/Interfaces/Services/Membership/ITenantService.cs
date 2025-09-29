@@ -7,7 +7,7 @@ namespace SL.Application.Interfaces.Services.Membership
     {
         Task CreateDatabaseAsync(Tenant tenant);
         Task<Tenant> InsertTenantAsync(TenantCreateModel tenantCreateModel);
+        Task<Tenant> GetTenantByIdAsync(Guid tenantId);
         Task DeleteTenantAsync(Guid tenantId);
-        Task SetTenantContext(Guid tenantId);
     }
 }

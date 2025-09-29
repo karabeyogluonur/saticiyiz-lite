@@ -64,11 +64,6 @@ namespace SL.Persistence.Services.Membership
             await _unitOfWork.SaveChangesAsync();
             return tenant;
         }
-        public async Task SetTenantContext(Guid tenantId)
-        {
-            Tenant tenant = await _tenantRepository.GetFirstOrDefaultAsync(predicate: tenant => tenant.Id == tenantId);
-            var tenantConnStr = $"Host=localhost;Database={tenant.DatabaseName};Username=postgres;Password=postgres";
-            _tenantUnitOfWork.ChangeDatabase(tenantConnStr);
-        }
+        public async Task<Tenant> GetTenantByIdAsync(Guid tenantId) => await _tenantRepository.GetFirstOrDefaultAsync(predicate: tenant => tenant.Id == tenantId);
     }
 }

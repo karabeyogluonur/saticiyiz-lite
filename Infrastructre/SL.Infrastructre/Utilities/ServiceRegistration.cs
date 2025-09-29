@@ -1,11 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SL.Application.Defaults.Caching;
 using SL.Application.Interfaces.Services.Caching;
+using SL.Application.Interfaces.Services.Context;
 using SL.Application.Interfaces.Services.Messages;
 using SL.Application.Interfaces.Services.Security;
+using SL.Application.Interfaces.Services.Tenants;
 using SL.Infrastructre.Services.Messages;
 using SL.Infrastructre.Services.Security;
 using SL.Infrastructure.Security;
 using SL.Infrastructure.Services.Caching;
+using SL.Infrastructure.Services.Context;
+using SL.Persistence.Utilities;
 using StackExchange.Redis;
 
 namespace SL.Infrastructre.Utilities
@@ -18,6 +23,8 @@ namespace SL.Infrastructre.Utilities
             services.AddScoped<ITokenizerService, TokenizerService>();
             services.AddScoped<IMessageTokenProvider, CustomerTokenProvider>();
             services.AddSingleton<IDataProtectionService, DataProtectionService>();
+            services.AddScoped<ITenantContext, TenantContext>();
+
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = Configuration.RedisConnectionString;
