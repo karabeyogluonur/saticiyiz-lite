@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddSerilogConfigurations();
 builder.Services.AddBaseServices();
+builder.Services.AddFactoryServices();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddLayerServices();
 builder.Services.AddAuthServices();
 builder.Services.AddLogging();
