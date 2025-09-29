@@ -15,11 +15,13 @@ public class AccountController : BasePublicController
         _authService = authService;
         _registrationWorkflowService = registrationWorkflowService;
     }
+
     [HttpGet]
     public async Task<IActionResult> Register()
     {
         return View();
     }
+
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
     {
@@ -36,19 +38,25 @@ public class AccountController : BasePublicController
             return View(registerViewModel);
         }
     }
+
     [HttpGet]
     public async Task<IActionResult> Login(string returnUrl = null)
     {
         if (User.Identity.IsAuthenticated)
             return LocalRedirect(returnUrl ?? Url.Action("Index", "Home", new { area = AreaNames.CUSTOMER }));
+
         ViewData["ReturnUrl"] = returnUrl;
+
         return View();
     }
+
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel loginViewModel, string returnUrl = null)
     {
         returnUrl ??= Url.Content($"~/{AreaNames.CUSTOMER}");
+
         Result result = await _authService.LoginAsync(loginViewModel.Email, loginViewModel.Password, loginViewModel.RememberMe);
+
         if (result.IsSuccess)
             return LocalRedirect(returnUrl);
         else

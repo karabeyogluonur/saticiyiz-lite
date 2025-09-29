@@ -12,7 +12,7 @@ public interface IEmailTemplateService
 
     Task<Result> UpdateTemplateAsync(EmailTemplateEditViewModel emailTemplateEditViewModel);
 
-    Task<DataTablesResponse<EmailTemplateListViewModel>> GetTemplatesForDataTablesAsync(DataTablesRequest request);
+    Task<DataTablesResponse<EmailTemplateListViewModel>> GetEmailTemplatesForDataTablesAsync(DataTablesRequest dataTablesRequest);
 
     Task<Result> ToggleIsActiveAsync(Guid id);
 

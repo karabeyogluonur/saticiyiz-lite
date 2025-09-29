@@ -17,7 +17,6 @@ public class EmailTemplateController : BaseAdminController
         _tokenizerService = tokenizerService;
     }
 
-    // GET: /Admin/EmailTemplate/Edit/{id}
     [HttpGet]
     public async Task<IActionResult> Edit(Guid id)
     {
@@ -66,19 +65,9 @@ public class EmailTemplateController : BaseAdminController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> GetData()
+    public async Task<IActionResult> GetData(DataTablesRequest dataTableRequest)
     {
-        var request = new DataTablesRequest
-        {
-            Draw = Convert.ToInt32(Request.Form["draw"].FirstOrDefault()),
-            Start = Convert.ToInt32(Request.Form["start"].FirstOrDefault()),
-            Length = Convert.ToInt32(Request.Form["length"].FirstOrDefault()),
-            SearchValue = Request.Form["search[value]"].FirstOrDefault(),
-            SortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault(),
-            SortDirection = Request.Form["order[0][dir]"].FirstOrDefault()
-        };
-
-        var response = await _emailTemplateService.GetTemplatesForDataTablesAsync(request);
+        var response = await _emailTemplateService.GetEmailTemplatesForDataTablesAsync(dataTableRequest);
         return Ok(response);
     }
 

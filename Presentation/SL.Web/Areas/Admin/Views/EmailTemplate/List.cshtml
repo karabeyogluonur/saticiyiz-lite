@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "E-posta Şablonları Yönetimi";
 }
-
 <div class="card mb-5">
     <div class="card-body">
         <div class="d-flex flex-wrap flex-stack">
@@ -49,110 +48,59 @@
         </table>
     </div>
 </div>
+
 @section Scripts {
     <script type="text/javascript">
-        "use strict";
-        var EmailTemplateListManager = function () {
-            var table, datatable;
-
-            var initDatatable = function () {
-                var getDataUrl = $('#email_templates_table').data('get-url');
-                datatable = $(table).DataTable({
-                    "info": false, 'order': [], "processing": true, "serverSide": true,
-                    "ajax": { "url": getDataUrl, "type": "POST", "headers": { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() } },
-                    "columns": [
-                        { "data": "name", "name": "Name" },
-                        { "data": "systemName", "name": "SystemName" },
-                        { "data": "subject", "name": "Subject" },
-                        { "data": "emailAccountName", "name": "EmailAccount.DisplayName" },
-                        { "data": "isActive", "name": "IsActive" },
-                        { "data": null }
-                    ],
-                    "columnDefs": [
-                        {
-                            targets: 4,
-                            render: function (data, type, row) {
-                                return data ? `<div class="badge badge-light-success fw-bold">Aktif</div>` : `<div class="badge badge-light-danger fw-bold">Pasif</div>`;
-                            }
-                        },
-                        {
-                            targets: -1, data: null, orderable: false, className: 'text-end',
-                            render: function (data, type, row) {
-                                let toggleButtonColor = row.isActive ? 'btn-light-danger' : 'btn-light-success';
-                                let toggleButtonTitle = row.isActive ? 'Pasif Hale Getir' : 'Aktif Hale Getir';
-                                let toggleButtonIcon = row.isActive ? 'ki-cross-circle' : 'ki-check-circle';
-
-                                return `
-                                        <a href="/Admin/EmailTemplate/Edit/${row.id}" class="btn btn-icon btn-sm btn-light-primary me-1" title="Düzenle"><i class="ki-duotone ki-pencil fs-3"><span class="path1"></span><span class="path2"></span></i></a>
-                                        <a href="#" class="btn btn-icon btn-sm ${toggleButtonColor}" data-kt-toggle-action="true" data-id="${row.id}" data-display-name="${row.name}" data-is-active="${row.isActive}" title="${toggleButtonTitle}">
-                                            <i class="ki-duotone ${toggleButtonIcon} fs-3"><span class="path1"></span><span class="path2"></span></i>
-                                        </a>
-                                    `;
-                            }
+        KTUtil.onDOMContentLoaded(function () {
+            MetronicDataTables.init({
+                table: '#email_templates_table',
+                search: {
+                    input: '#datatable_search_input'
+                },
+                columns: [
+                    { "data": "name", "name": "Name" },
+                    { "data": "systemName", "name": "SystemName" },
+                    { "data": "subject", "name": "Subject" },
+                    { "data": "emailAccountName", "name": "EmailAccount.DisplayName" },
+                    { "data": "isActive", "name": "IsActive" },
+                    { "data": null, "name": "Actions", "orderable": false, "searchable": false }
+                ],
+                columnDefs: [
+                    {
+                        targets: 4,
+                        render: function (data, type, row) {
+                            return data ? `<div class="badge badge-light-success fw-bold">Aktif</div>` : `<div class="badge badge-light-danger fw-bold">Pasif</div>`;
                         }
-                    ]
-                });
-                datatable.on('draw', function () { handleToggleStatusRows(); });
-            }
+                    },
+                    {
+                        targets: -1, className: 'text-end',
+                        render: function (data, type, row) {
+                            let toggleButtonColor = row.isActive ? 'btn-light-danger' : 'btn-light-success';
+                            let toggleButtonTitle = row.isActive ? 'Pasif Hale Getir' : 'Aktif Hale Getir';
+                            let toggleButtonIcon = row.isActive ? 'ki-cross-circle' : 'ki-check-circle';
 
-            var handleSearch = function () {
-                const searchInput = document.querySelector('#datatable_search_input');
-                let timer;
-                searchInput.addEventListener('keyup', function (e) {
-                    clearTimeout(timer);
-                    timer = setTimeout(function () { datatable.search(e.target.value).draw(); }, 300);
-                });
-            }
-
-            var handleToggleStatusRows = function () {
-                const toggleButtons = table.querySelectorAll('[data-kt-toggle-action="true"]');
-                toggleButtons.forEach(d => {
-                    if (d.getAttribute('listener') === 'true') { return; }
-                    d.setAttribute('listener', 'true');
-                    d.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const link = e.target.closest('a');
-                        const recordId = link.getAttribute('data-id');
+                            return `
+                                <a href="/Admin/EmailTemplate/Edit/${row.id}" class="btn btn-icon btn-sm btn-light-primary me-1" title="Düzenle"><i class="ki-duotone ki-pencil fs-3"><span class="path1"></span><span class="path2"></span></i></a>
+                                <a href="#" class="btn btn-icon btn-sm ${toggleButtonColor}" data-kt-toggle-action="true" data-id="${row.id}" data-display-name="${row.name}" data-is-active="${row.isActive}" title="${toggleButtonTitle}">
+                                    <i class="ki-duotone ${toggleButtonIcon} fs-3"><span class="path1"></span><span class="path2"></span></i>
+                                </a>
+                            `;
+                        }
+                    }
+                ],
+                action: {
+                    selector: '[data-kt-toggle-action="true"]',
+                    url: '@Url.Action("ToggleIsActive", "EmailTemplate")',
+                    confirmButtonText: "Evet, Değiştir!",
+                    confirmButtonClass: "btn-warning",
+                    confirmationTextGenerator: function (link) {
                         const displayName = link.getAttribute('data-display-name');
                         const isActive = link.getAttribute('data-is-active') === 'true';
                         const actionText = isActive ? 'pasif hale getirmek' : 'aktif hale getirmek';
-                        const toggleUrl = '/Admin/EmailTemplate/ToggleIsActive';
-
-                        Swal.fire({
-                            text: "'" + displayName + "' şablonunu " + actionText + " istediğinizden emin misiniz?",
-                            icon: "warning", showCancelButton: true, buttonsStyling: false,
-                            confirmButtonText: "Evet, durumunu değiştir!", cancelButtonText: "Hayır, vazgeç",
-                            customClass: { confirmButton: "btn fw-bold btn-danger", cancelButton: "btn fw-bold btn-active-light-primary" }
-                        }).then(function (result) {
-                            if (result.value) {
-                                $.ajax({
-                                    url: toggleUrl, type: "POST", data: { id: recordId },
-                                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
-                                    success: function (response) {
-                                        if (response.success) {
-                                            Swal.fire("Başarılı!", response.message, "success").then(function () { datatable.draw(); });
-                                        } else {
-                                            Swal.fire("Hata!", response.message, "error");
-                                        }
-                                    },
-                                    error: function () { Swal.fire("Hata!", "İşlem sırasında bir hata oluştu.", "error"); }
-                                });
-                            }
-                        });
-                    })
-                });
-            }
-
-            return {
-                init: function () {
-                    table = document.querySelector('#email_templates_table');
-                    if (!table) { return; }
-                    initDatatable();
-                    handleSearch();
-                    handleToggleStatusRows();
+                        return `'${displayName}' şablonunu ${actionText} istediğinizden emin misiniz?`;
+                    }
                 }
-            };
-        }();
-        KTUtil.onDOMContentLoaded(function () { EmailTemplateListManager.init(); });
+            });
+        });
     </script>
 }

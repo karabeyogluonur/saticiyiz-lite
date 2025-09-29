@@ -13,6 +13,7 @@ using System.Linq.Dynamic.Core;
 using SL.Application.Interfaces.Services.Messages;
 using SL.Domain.Entities.Messages;
 using SL.Domain.Enums.Common;
+using SL.Persistence.Extensions;
 
 namespace SL.Persistence.Services.Messages;
 
@@ -74,40 +75,10 @@ public class EmailTemplateService : IEmailTemplateService
             return Result.Failure("Güncelleme sırasında beklenmedik bir sunucu hatası oluştu.", ErrorCode.InternalServerError);
         }
     }
-    public async Task<DataTablesResponse<EmailTemplateListViewModel>> GetTemplatesForDataTablesAsync(DataTablesRequest request)
+    public async Task<DataTablesResponse<EmailTemplateListViewModel>> GetEmailTemplatesForDataTablesAsync(DataTablesRequest dataTablesRequest)
     {
-        var query = _emailTemplateRepository.GetAll(include: emailTemplate => emailTemplate.Include(emailTemplate => emailTemplate.EmailAccount));
-
-        // Global Arama
-        if (!string.IsNullOrWhiteSpace(request.SearchValue))
-        {
-            var searchValue = request.SearchValue.ToLower();
-            query = query.Where(et => et.Name.ToLower().Contains(searchValue) ||
-                                              et.SystemName.ToLower().Contains(searchValue) ||
-                                              et.Subject.ToLower().Contains(searchValue) ||
-                                              et.EmailAccount.DisplayName.ToLower().Contains(searchValue));
-        }
-
-        int recordsTotal = await query.CountAsync();
-
-        // Sıralama
-        if (!string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
-            query = query.OrderBy(request.SortColumn + " " + request.SortDirection);
-        else
-            query = query.OrderByDescending(et => et.CreatedAt);
-
-
-        var pagedData = await query.Skip(request.Start).Take(request.Length).ToListAsync();
-
-        var viewModelData = _mapper.Map<List<EmailTemplateListViewModel>>(pagedData);
-
-        return new DataTablesResponse<EmailTemplateListViewModel>
-        {
-            Draw = request.Draw,
-            RecordsTotal = recordsTotal,
-            RecordsFiltered = recordsTotal,
-            Data = viewModelData
-        };
+        var query = _emailTemplateRepository.GetAll(include: emailTemplate => emailTemplate.Include(e => e.EmailAccount)).OrderByDescending(emailTemplate => emailTemplate.CreatedAt);
+        return await query.ToDataTablesResponseAsync<EmailTemplate, EmailTemplateListViewModel>(dataTablesRequest, _mapper);
     }
 
     public async Task<Result> ToggleIsActiveAsync(Guid id)

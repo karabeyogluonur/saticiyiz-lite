@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SL.Application.Interfaces.Repositories;
 using SL.Application.Interfaces.Repositories.UnitOfWork;
@@ -11,6 +12,7 @@ using SL.Domain;
 using SL.Domain.Entities.Messages;
 using SL.Domain.Enums.Common;
 using SL.Persistence.Contexts;
+using SL.Persistence.Extensions;
 using System.Linq.Dynamic.Core;
 
 namespace SL.Persistence.Services.Messages;
@@ -79,26 +81,8 @@ public class EmailAccountService : IEmailAccountService
     }
     public async Task<DataTablesResponse<EmailAccountListViewModel>> GetEmailAccountsForDataTablesAsync(DataTablesRequest dataTablesRequest)
     {
-        var query = _emailAccountRepository.GetAll();
-        var recordsTotal = query.Count();
-        if (!string.IsNullOrEmpty(dataTablesRequest.SearchValue))
-        {
-            query = query.Where(e => e.DisplayName.Contains(dataTablesRequest.SearchValue) || e.Email.Contains(dataTablesRequest.SearchValue));
-        }
-        var recordsFiltered = query.Count();
-        if (!string.IsNullOrEmpty(dataTablesRequest.SortColumn) && !string.IsNullOrEmpty(dataTablesRequest.SortDirection))
-            query = query.OrderBy(string.Format("{0} {1}", dataTablesRequest.SortColumn, dataTablesRequest.SortDirection));
-        else
-            query = query.OrderBy(e => e.Id);
-        var pagedData = query.Skip(dataTablesRequest.Start).Take(dataTablesRequest.Length).ToList();
-        var viewModelData = _mapper.Map<List<EmailAccountListViewModel>>(pagedData);
-        return new DataTablesResponse<EmailAccountListViewModel>
-        {
-            Draw = dataTablesRequest.Draw,
-            RecordsTotal = recordsTotal,
-            RecordsFiltered = recordsFiltered,
-            Data = viewModelData
-        };
+        IOrderedQueryable<EmailAccount> query = _emailAccountRepository.GetAll().OrderByDescending(emailAccount => emailAccount.CreatedAt);
+        return await query.ToDataTablesResponseAsync<EmailAccount, EmailAccountListViewModel>(dataTablesRequest, _mapper);
     }
     public async Task<Result> UpdateEmailAccountAsync(EmailAccountEditViewModel emailAccountEditViewModel)
     {

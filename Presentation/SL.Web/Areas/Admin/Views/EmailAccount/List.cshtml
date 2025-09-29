@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "E-posta Hesapları Yönetimi";
 }
+
 <div class="card mb-5">
     <div class="card-body">
         <div class="d-flex flex-wrap flex-stack">
@@ -8,10 +9,8 @@
                 <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">E-posta
                     Hesapları</h1>
                 <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                    <li class="breadcrumb-item text-muted">
-                        <a asp-area="Admin" asp-controller="Home" asp-action="Index"
-                            class="text-muted text-hover-primary">Anasayfa</a>
-                    </li>
+                    <li class="breadcrumb-item text-muted"><a asp-area="Admin" asp-controller="Home" asp-action="Index"
+                            class="text-muted text-hover-primary">Anasayfa</a></li>
                     <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
                     <li class="breadcrumb-item text-muted">Sistem Ayarları</li>
                     <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
@@ -20,13 +19,13 @@
             </div>
             <div class="d-flex align-items-center py-1">
                 <a asp-area="Admin" asp-controller="EmailAccount" asp-action="Add" class="btn btn-primary">
-                    <i class="ki-duotone ki-plus fs-2"></i>
-                    Yeni Hesap Ekle
+                    <i class="ki-duotone ki-plus fs-2"></i> Yeni Hesap Ekle
                 </a>
             </div>
         </div>
     </div>
 </div>
+
 <div class="card">
     <div class="card-header border-0 pt-6">
         <div class="card-title">
@@ -56,96 +55,43 @@
         </table>
     </div>
 </div>
+
 @section Scripts {
     <script type="text/javascript">
-        "use strict";
-        var EmailAccountListManager = function () {
-            var table, datatable;
-            var initDatatable = function () {
-                var getDataUrl = $('#email_accounts_table').data('get-url');
-                var token = $('input[name="__RequestVerificationToken"]').val();
-                datatable = $(table).DataTable({
-                    "info": false, 'order': [], "processing": true, "serverSide": true,
-                    "ajax": { "url": getDataUrl, "type": "POST", "headers": { "RequestVerificationToken": token } },
-                    "columns": [
-                        { "data": "displayName", "name": "DisplayName" }, { "data": "email", "name": "Email" },
-                        { "data": "host", "name": "Host" }, { "data": "port", "name": "Port" },
-                        { "data": "username", "name": "Username" }, { "data": null }
-                    ],
-                    "columnDefs": [
-                        { targets: 3, render: function (data, type, row) { return `<span class="badge badge-light-info">${data}</span>`; } },
-                        {
-                            targets: -1, data: null, orderable: false, className: 'text-end',
-                            render: function (data, type, row) {
-                                return `
-                                                <a href="/Admin/EmailAccount/Edit/${row.id}" class="btn btn-icon btn-sm btn-light-primary me-1" title="Düzenle"><i class="ki-duotone ki-pencil fs-3"><span class="path1"></span><span class="path2"></span></i></a>
-                                                <a href="#" class="btn btn-icon btn-sm btn-light-danger" data-kt-delete-action="true" data-id="${row.id}" data-display-name="${row.displayName}" title="Sil"><i class="ki-duotone ki-trash fs-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>
-                                            `;
-                            }
+        KTUtil.onDOMContentLoaded(function () {
+            MetronicDataTables.init({
+                table: '#email_accounts_table',
+                search: {
+                    input: '#datatable_search_input'
+                },
+                columns: [
+                    { "data": "displayName", "name": "DisplayName" },
+                    { "data": "email", "name": "Email" },
+                    { "data": "host", "name": "Host" },
+                    { "data": "port", "name": "Port" },
+                    { "data": "username", "name": "Username" },
+                    { "data": null, "name": "Actions", "orderable": false, "searchable": false }
+                ],
+                columnDefs: [
+                    { targets: 3, render: function (data, type, row) { return `<span class="badge badge-light-info">${data}</span>`; } },
+                    {
+                        targets: -1, className: 'text-end',
+                        render: function (data, type, row) {
+                            return `
+                                <a href="/Admin/EmailAccount/Edit/${row.id}" class="btn btn-icon btn-sm btn-light-primary me-1" title="Düzenle"><i class="ki-duotone ki-pencil fs-3"><span class="path1"></span><span class="path2"></span></i></a>
+                                <a href="#" class="btn btn-icon btn-sm btn-light-danger" data-kt-delete-action="true" data-id="${row.id}" data-display-name="${row.displayName}" title="Sil"><i class="ki-duotone ki-trash fs-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>
+                            `;
                         }
-                    ],
-                });
-                datatable.on('draw', function () { handleDeleteRows(); });
-            }
-            var handleSearch = function () {
-                const searchInput = document.querySelector('#datatable_search_input');
-                let timer;
-                searchInput.addEventListener('keyup', function (e) {
-                    clearTimeout(timer);
-                    timer = setTimeout(function () { datatable.search(e.target.value).draw(); }, 300);
-                });
-            }
-            var handleDeleteRows = function () {
-                const deleteButtons = table.querySelectorAll('[data-kt-delete-action="true"]');
-                deleteButtons.forEach(d => {
-                    if (d.getAttribute('listener') === 'true') { return; }
-                    d.setAttribute('listener', 'true');
-                    d.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const link = e.target.closest('a');
-                        const recordId = link.getAttribute('data-id');
-                        const displayName = link.getAttribute('data-display-name');
-                        const deleteUrl = '/Admin/EmailAccount/Delete';
-                        Swal.fire({
-                            text: "'" + displayName + "' hesabını silmek istediğinizden emin misiniz?",
-                            icon: "warning", showCancelButton: true, buttonsStyling: false,
-                            confirmButtonText: "Evet, sil!", cancelButtonText: "Hayır, vazgeç",
-                            customClass: { confirmButton: "btn fw-bold btn-danger", cancelButton: "btn fw-bold btn-active-light-primary" }
-                        }).then(function (result) {
-                            if (result.value) {
-                                $.ajax({
-                                    url: deleteUrl,
-                                    type: "POST",
-                                    data: { id: recordId },
-                                    headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
-                                    success: function (response) {
-                                        if (response.success) {
-                                            Swal.fire("Silindi!", response.message, "success").then(function () {
-                                                datatable.draw();
-                                            });
-                                        } else {
-                                            Swal.fire("Hata!", response.message, "error");
-                                        }
-                                    },
-                                    error: function () {
-                                        Swal.fire("Hata!", "İşlem sırasında bir hata oluştu.", "error");
-                                    }
-                                });
-                            }
-                        });
-                    })
-                });
-            }
-            return {
-                init: function () {
-                    table = document.querySelector('#email_accounts_table');
-                    if (!table) { return; }
-                    initDatatable();
-                    handleSearch();
-                    handleDeleteRows();
+                    }
+                ],
+                action: {
+                    selector: '[data-kt-delete-action="true"]',
+                    url: '@Url.Action("Delete", "EmailAccount")',
+                    confirmationText: "'{displayName}' hesabını silmek istediğinizden emin misiniz?",
+                    confirmButtonText: "Evet, Sil!",
+                    confirmButtonClass: "btn-danger"
                 }
-            };
-        }();
-        KTUtil.onDOMContentLoaded(function () { EmailAccountListManager.init(); });
+            });
+        });
     </script>
 }
