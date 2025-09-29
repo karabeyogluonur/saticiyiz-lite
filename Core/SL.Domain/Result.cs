@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using SL.Domain.Enums;
+﻿using SL.Domain.Enums.Common;
+
 namespace SL.Domain
 {
     public record Result

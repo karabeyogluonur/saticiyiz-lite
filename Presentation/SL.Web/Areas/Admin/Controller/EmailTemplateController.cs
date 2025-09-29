@@ -1,6 +1,5 @@
-using System;
 using Microsoft.AspNetCore.Mvc;
-using SL.Application.Interfaces.Services;
+using SL.Application.Interfaces.Services.Messages;
 using SL.Application.Models.Request;
 using SL.Application.Models.ViewModels.EmailTemplate;
 

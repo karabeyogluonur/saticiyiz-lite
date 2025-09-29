@@ -1,5 +1,4 @@
-using System;
-using SL.Application.Interfaces.Services;
+using SL.Application.Interfaces.Services.Membership;
 namespace SL.Web.Mvc.Middlewares;
 
 public class TenantMiddleware

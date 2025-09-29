@@ -2,13 +2,16 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SL.Application.Interfaces.Services;
+using SL.Application.Interfaces.Services.Membership;
+using SL.Application.Interfaces.Services.Security;
 using SL.Application.Models.DTOs.Tenant;
 using SL.Application.Models.ViewModels.Account;
-using SL.Domain.Defaults;
-using SL.Domain.Entities;
-using SL.Domain.Enums;
+using SL.Domain.Defaults.Messages;
+using SL.Domain.Entities.Membership;
+using SL.Domain.Entities.Messages;
+using SL.Domain.Enums.Membership;
 using SL.Persistence.Contexts;
+
 namespace SL.Persistence.Seeds
 {
     public static class DbInitializer

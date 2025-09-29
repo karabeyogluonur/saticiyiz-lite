@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using SL.Application.Utilities;
-using SL.Domain.Defaults;
-using SL.Domain.Enums;
+using SL.Domain.Defaults.Membership;
+using SL.Domain.Enums.Membership;
 using SL.Infrastructre.Utilities;
 using SL.Persistence.Utilities;
 namespace SL.Web.Mvc

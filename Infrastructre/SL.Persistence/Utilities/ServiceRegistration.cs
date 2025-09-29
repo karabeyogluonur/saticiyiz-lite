@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SL.Application.Interfaces.Services;
-using SL.Domain.Entities;
+using SL.Application.Interfaces.Services.Membership;
+using SL.Application.Interfaces.Services.Messages;
+using SL.Domain.Entities.Membership;
 using SL.Persistence.Contexts;
-using SL.Persistence.Services;
+using SL.Persistence.Services.Membership;
+using SL.Persistence.Services.Messages;
+
 namespace SL.Persistence.Utilities
 {
     public static class ServiceRegistration

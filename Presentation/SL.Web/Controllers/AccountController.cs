@@ -1,17 +1,9 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Npgsql;
+﻿using Microsoft.AspNetCore.Mvc;
 using SL.Application.Framework;
-using SL.Application.Interfaces.Repositories.UnitOfWork;
-using SL.Application.Interfaces.Services;
-using SL.Application.Models.DTOs.Tenant;
+using SL.Application.Interfaces.Services.Membership;
 using SL.Application.Models.ViewModels.Account;
 using SL.Domain;
-using SL.Domain.Entities;
-using SL.Persistence.Contexts;
-using SL.Persistence.Services;
+
 namespace SL.Web.Controllers;
 
 public class AccountController : BasePublicController

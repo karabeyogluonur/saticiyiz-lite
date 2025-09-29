@@ -1,13 +1,9 @@
-using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using SL.Application.Interfaces.Services;
+using SL.Application.Interfaces.Services.Messages;
 using SL.Application.Models.Request;
 using SL.Application.Models.ViewModels.EmailAccount;
 using SL.Domain;
-using SL.Domain.Entities;
 namespace SL.Web.Areas.Admin.Controller;
 
 public class EmailAccountController : BaseAdminController

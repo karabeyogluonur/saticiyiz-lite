@@ -1,9 +1,10 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using SL.Application.Interfaces.Services;
-using SL.Infrastructre.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using SL.Application.Interfaces.Services.Messages;
+using SL.Application.Interfaces.Services.Security;
+using SL.Infrastructre.Services.Messages;
+using SL.Infrastructre.Services.Security;
 using SL.Infrastructure.Security;
-using SL.Infrastructure.Services;
+
 namespace SL.Infrastructre.Utilities
 {
     public static class ServiceRegistration

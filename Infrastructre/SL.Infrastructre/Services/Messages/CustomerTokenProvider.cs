@@ -1,0 +1,25 @@
+
+
+using SL.Application.Interfaces.Services.Messages;
+using SL.Domain.Entities.Membership;
+
+namespace SL.Infrastructre.Services.Messages;
+
+public class CustomerTokenProvider : IMessageTokenProvider
+{
+    public IEnumerable<string> GetAllowedTokens()
+    {
+        return new[] { "{{User.FullName}}", "{{User.Email}}" };
+    }
+
+    public void AddTokenValues(Dictionary<string, string> tokenValues, params object[] data)
+    {
+        var user = data.OfType<ApplicationUser>().FirstOrDefault();
+
+        if (user != null)
+        {
+            tokenValues["{{User.FullName}}"] = $"{user.FirstName} {user.LastName}";
+            tokenValues["{{User.Email}}"] = user.Email;
+        }
+    }
+}

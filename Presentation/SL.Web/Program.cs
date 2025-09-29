@@ -1,9 +1,5 @@
 ﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
 using Serilog;
-using SL.Application.Interfaces.Repositories.UnitOfWork;
-using SL.Domain.Entities;
 using SL.Web.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
