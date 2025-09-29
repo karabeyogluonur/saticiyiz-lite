@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using SL.Application.Interfaces.Factories.Messages;
 using SL.Application.Utilities;
 using SL.Domain.Defaults.Membership;
 using SL.Domain.Enums.Membership;
 using SL.Infrastructre.Utilities;
 using SL.Persistence.Utilities;
+using SL.Web.Factories;
+
 namespace SL.Web.Mvc
 {
     public static class ServiceRegistration
