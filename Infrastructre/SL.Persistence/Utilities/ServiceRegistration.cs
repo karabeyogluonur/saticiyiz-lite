@@ -34,6 +34,7 @@ namespace SL.Persistence.Utilities
             services.AddTransient<IEmailAccountService, EmailAccountService>();
             services.AddTransient<IEmailTemplateService, EmailTemplateService>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IQueuedEmailService, QueuedEmailService>();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>();
         }
     }

@@ -1,7 +1,9 @@
 
 using AutoMapper;
+using SL.Application.Extensions;
 using SL.Application.Models.ViewModels.EmailAccount;
 using SL.Application.Models.ViewModels.EmailTemplate;
+using SL.Application.Models.ViewModels.QueuedEmail;
 using SL.Domain.Entities.Messages;
 
 namespace SL.Application.Mappers
@@ -29,6 +31,14 @@ namespace SL.Application.Mappers
 
             CreateMap<EmailTemplate, EmailTemplateListViewModel>()
                 .ForMember(dest => dest.EmailAccountName, opt => opt.MapFrom(src => src.EmailAccount.DisplayName));
+
+            #endregion
+
+            #region Queued Email
+
+            CreateMap<QueuedEmail, QueuedEmailListViewModel>()
+                .ForMember(dest => dest.EmailAccountName, opt => opt.MapFrom(src => src.EmailAccount.DisplayName))
+                .ForMember(dest => dest.StatusDisplayName, opt => opt.MapFrom(src => src.Status.GetDisplayName())); ;
 
             #endregion
 

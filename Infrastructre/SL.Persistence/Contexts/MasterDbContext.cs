@@ -1,7 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SL.Domain.Entities;
+using SL.Domain.Entities.Membership;
+using SL.Domain.Entities.Messages;
 namespace SL.Persistence.Contexts
 {
     public class MasterDbContext : IdentityDbContext<ApplicationUser>
@@ -10,6 +10,7 @@ namespace SL.Persistence.Contexts
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<EmailAccount> EmailAccounts { get; set; }
         public DbSet<EmailTemplate> EmailTemplates { get; set; }
+        public DbSet<QueuedEmail> QueuedEmails { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -1,0 +1,151 @@
+@model QueuedEmailListViewModel
+@{
+    ViewData["Title"] = "E-posta Gönderim Kuyruğu";
+}
+
+<div class="card mb-5">
+    <div class="card-body">
+        <div class="d-flex flex-wrap flex-stack">
+            <div class="d-flex flex-column justify-content-center flex-wrap me-3">
+                <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">E-posta
+                    Kuyruğu</h1>
+                <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                    <li class="breadcrumb-item text-muted"><a asp-area="Admin" asp-controller="Home" asp-action="Index"
+                            class="text-muted text-hover-primary">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                    <li class="breadcrumb-item text-muted">Sistem</li>
+                    <li class="breadcrumb-item"><span class="bullet bg-gray-400 w-5px h-2px"></span></li>
+                    <li class="breadcrumb-item text-dark">E-posta Kuyruğu</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header border-0 pt-6">
+        <div class="card-title">
+            <div class="d-flex align-items-center flex-wrap gap-3">
+                <div class="position-relative my-1">
+                    <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5" style="line-height:2;"><span
+                            class="path1"></span><span class="path2"></span></i>
+                    <input type="text" id="datatable_search_input"
+                        class="form-control form-control-sm form-control-solid w-200px ps-14"
+                        placeholder="Kuyrukta Ara" />
+                </div>
+                <div class="w-200px">
+                    <select id="status_filter" asp-items="Model.AvailableStatuses"
+                        class="form-select form-select-sm form-select-solid" data-control="select2"
+                        data-placeholder="Tüm Durumlar" data-allow-clear="true">
+                        <option></option>
+                    </select>
+                </div>
+                <div class="w-200px">
+                    <select id="account_filter" asp-items="Model.AvailableEmailAccounts"
+                        class="form-select form-select-sm form-select-solid" data-control="select2"
+                        data-placeholder="Tüm Hesaplar" data-allow-clear="true">
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body py-4 table-responsive">
+        @Html.AntiForgeryToken()
+        <table id="queued_emails_table" class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4"
+            data-get-url="@Url.Action("GetData", "QueuedEmail", new { area = "Admin" })">
+            <thead>
+                <tr class="fw-bold text-muted">
+                    <th class="min-w-100px">Durum</th>
+                    <th class="min-w-200px">Alıcı</th>
+                    <th class="min-w-250px">Konu</th>
+                    <th class="min-w-150px">Gönderici</th>
+                    <th class="min-w-75px">Deneme</th>
+                    <th class="min-w-150px">Kuyruğa Alınma</th>
+                    <th class="min-w-100px text-end">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        KTUtil.onDOMContentLoaded(function () {
+
+            MetronicDataTables.init({
+                table: '#queued_emails_table',
+                responsive: false, // DÜZELTME: '+' işaretini kaldırmak için özellik eklendi
+                search: {
+                    input: '#datatable_search_input'
+                },
+                columns: [
+                    { "data": "status", "name": "Status", "searchable": true },
+                    { "data": "to", "name": "To", "searchable": true },
+                    { "data": "subject", "name": "Subject", "searchable": true },
+                    { "data": "emailAccountName", "name": "EmailAccount.DisplayName", "searchable": true },
+                    { "data": "sentTries", "name": "SentTries", "searchable": false },
+                    { "data": "createdAt", "name": "CreatedAt", "searchable": false },
+                    { "data": null, "name": "Actions", "orderable": false, "searchable": false },
+                    { "data": null, "name": "EmailAccountId", "visible": false, "searchable": true }
+                ],
+                // DÜZELTME: Status render fonksiyonu daha basit ve sağlam bir 'switch' yapısıyla yeniden yazıldı.
+                columnDefs: [
+                    {
+                        targets: 0,
+                        render: function (data, type, row) {
+                            const status = row.status; // Sayısal değer (0, 1, 2, 3)
+                            const displayText = row.statusDisplayName || 'Bilinmiyor';
+                            let badgeClass = 'badge-light'; // Varsayılan renk
+
+                            switch (status) {
+                                case 0: // Pending
+                                    badgeClass = 'badge-light-primary';
+                                    break;
+                                case 1: // Sent
+                                    badgeClass = 'badge-light-success';
+                                    break;
+                                case 2: // Failed
+                                    badgeClass = 'badge-light-warning';
+                                    break;
+                                case 3: // Aborted
+                                    badgeClass = 'badge-light-danger';
+                                    break;
+                            }
+
+                            return `<div class="badge ${badgeClass} fw-bold">${displayText}</div>`;
+                        }
+                    },
+                    {
+                        targets: 5,
+                        render: function (data) { return moment(data).format('DD.MM.YYYY HH:mm'); }
+                    },
+                    {
+                        targets: 6, className: 'text-end',
+                        render: function (data, type, row) {
+                            return `<a href="#" class="btn btn-icon btn-sm btn-light-danger" data-kt-delete-action="true" data-id="${row.id}" data-display-name="${row.subject}" title="Kuyruktan Sil"><i class="ki-duotone ki-trash fs-3"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></i></a>`;
+                        }
+                    }
+                ],
+                ajaxDataFunction: function (d) {
+                    d.columns[0].search.value = $('#status_filter').val() || '';
+                    d.columns[7].search.value = $('#account_filter').val() || '';
+                },
+                action: {
+                    selector: '[data-kt-delete-action="true"]',
+                    url: '@Url.Action("Delete", "QueuedEmail")',
+                    confirmationText: "'{displayName}' konulu e-postayı kuyruktan kalıcı olarak silmek istediğinizden emin misiniz?",
+                    confirmButtonText: "Evet, Sil!",
+                    confirmButtonClass: "btn-danger"
+                }
+            });
+
+            $('#status_filter, #account_filter').on('change', function () {
+                $('#queued_emails_table').DataTable().draw();
+            });
+            $('#status_filter').select2();
+            $('#account_filter').select2();
+        });
+    </script>
+}

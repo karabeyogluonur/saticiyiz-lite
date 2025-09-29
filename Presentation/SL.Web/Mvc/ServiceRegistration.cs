@@ -12,6 +12,10 @@ namespace SL.Web.Mvc
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
+        public static void AddFactoryServices(this IServiceCollection services)
+        {
+            services.AddScoped<IQueuedEmailModelFactory, QueuedEmailModelFactory>();
+        }
         public static void AddLayerServices(this IServiceCollection services)
         {
             services.AddApplicationService();
