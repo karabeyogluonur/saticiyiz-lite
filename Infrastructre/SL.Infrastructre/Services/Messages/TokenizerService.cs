@@ -20,13 +20,13 @@ public class TokenizerService : ITokenizerService
     {
         var allTokenValues = new Dictionary<string, string>();
 
-        // Her provider'a token değerlerini üretmesi için şans ver.
+
         foreach (var provider in _tokenProviders)
         {
             provider.AddTokenValues(allTokenValues, data);
         }
 
-        // Toplanan tüm token'ları metin içinde değiştir.
+
         foreach (var kvp in allTokenValues)
         {
             template = template.Replace(kvp.Key, kvp.Value);

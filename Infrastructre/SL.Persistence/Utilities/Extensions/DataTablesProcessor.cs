@@ -25,7 +25,7 @@ namespace SL.Persistence.Extensions
             int recordsTotal = await query.CountAsync();
             ExpressionStarter<TEntity> predicate = PredicateBuilder.New<TEntity>(true);
 
-            // --- JENERİK GLOBAL FİLTRELEME ---
+
             if (!string.IsNullOrWhiteSpace(dataTableRequest.Search?.Value))
             {
                 ExpressionStarter<TEntity> globalSearchPredicate = PredicateBuilder.New<TEntity>(false);
@@ -35,7 +35,7 @@ namespace SL.Persistence.Extensions
                 {
                     ParameterExpression parameterExpression = Expression.Parameter(typeof(TEntity), "e");
 
-                    // İlişkili property'ler için (örn: "EmailAccount.DisplayName")
+
                     Expression propertyExpression = parameterExpression;
                     foreach (string member in columnRequest.Name.Split('.'))
                     {
@@ -58,7 +58,7 @@ namespace SL.Persistence.Extensions
                 predicate = predicate.And(globalSearchPredicate);
             }
 
-            // --- JENERİK KOLON BAZLI FİLTRELEME ---
+
             ExpressionStarter<TEntity> columnFilterPredicate = PredicateBuilder.New<TEntity>(true);
             foreach (ColumnRequest? columnRequest in dataTableRequest.Columns.Where(column => column.Searchable && !string.IsNullOrWhiteSpace(column.Search?.Value) && !string.IsNullOrWhiteSpace(column.Name)))
             {
@@ -113,7 +113,7 @@ namespace SL.Persistence.Extensions
             query = query.Where(predicate);
             int recordsFiltered = await query.CountAsync();
 
-            // --- JENERİK SIRALAMA ---
+
             if (dataTableRequest.Order != null && dataTableRequest.Order.Any())
             {
                 List<string> orderingClauses = new List<string>();
@@ -131,7 +131,7 @@ namespace SL.Persistence.Extensions
                 }
             }
 
-            // --- SAYFALAMA VE PROJECTION ---
+
             List<TViewModel> pagedData = await query
                 .Skip(dataTableRequest.Start)
                 .Take(dataTableRequest.Length)

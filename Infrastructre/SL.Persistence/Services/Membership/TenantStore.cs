@@ -11,10 +11,10 @@ using SL.Persistence.Contexts;
 
 namespace SL.Infrastructure.Services.Membership;
 
-/// <summary>
-/// ITenantStore arayüzünün, UnitOfWork ve Repository desenine uygun somut implementasyonu.
-/// Tenant konfigürasyonunu önce cache'den arar, bulamazsa Master veritabanından okur ve cache'e ekler.
-/// </summary>
+
+
+
+
 public class TenantStore : ITenantStore
 {
     private readonly ICacheManager _cacheManager;
@@ -28,16 +28,16 @@ public class TenantStore : ITenantStore
 
     public async Task<TenantConfigurationModel> GetConfigurationByIdAsync(Guid tenantId)
     {
-        // Cache anahtarını standartlara uygun şekilde alıyoruz.
+
         var cacheKey = TenantCacheDefaults.ConfigurationByIdCacheKey(tenantId);
         cacheKey.CacheTimeInMinutes = 1440; // 24 saat
 
         return await _cacheManager.GetAsync(cacheKey, async () =>
         {
-            // Cache'de veri yoksa, Repository'yi kullanarak veritabanından tenant bilgisini oku.
+
             var tenant = await _tenantRepository.GetFirstOrDefaultAsync(predicate: t => t.Id == tenantId);
 
-            // Eğer tenant bulunursa, onu DTO'ya map'leyerek döndür.
+
             if (tenant is null)
             {
                 return null;

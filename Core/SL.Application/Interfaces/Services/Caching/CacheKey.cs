@@ -9,8 +9,8 @@ public class CacheKey
     public string Prefix { get; protected set; }
     public int? CacheTimeInMinutes { get; set; }
 
-    // Örnek: "Tenant" prefix'i ile bir anahtar oluşturma
-    // new CacheKey("Tenant:{0}", tenantId) -> Key: Tenant:123, Prefix: Tenant
+
+
     public CacheKey(string keyFormat, params object[] args)
     {
         Key = string.Format(keyFormat, args.Select(a => a?.ToString() ?? "null").ToArray());

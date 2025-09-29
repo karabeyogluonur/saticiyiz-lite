@@ -42,7 +42,7 @@ namespace SL.Infrastructre.Utilities
             provider.GetRequiredService<ICacheManager>() as IStaticCacheManager);
             services.AddSingleton<IMemoryCacheTokenService, MemoryCacheTokenService>();
 
-            // WorkContext, her HTTP isteği için ayrı bir örnek olmalı. Bu yüzden Scoped.
+
             services.AddScoped<IWorkContext, WorkContext>();
 
 

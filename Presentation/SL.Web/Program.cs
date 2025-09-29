@@ -17,7 +17,7 @@ builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Add middlewares
+
 
 app.DatabaseSeedAsync();
 app.AddDevelopmentBuilder();

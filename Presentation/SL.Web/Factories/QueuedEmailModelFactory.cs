@@ -6,7 +6,7 @@ using SL.Application.Models.ViewModels.QueuedEmail;
 using SL.Domain.Enums.Messages;
 
 
-// NAMESPACE GÜNCELLENDİ
+
 namespace SL.Web.Factories
 {
     public class QueuedEmailModelFactory : IQueuedEmailModelFactory
