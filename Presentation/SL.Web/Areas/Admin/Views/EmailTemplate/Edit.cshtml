@@ -136,7 +136,17 @@
 
             const loadTokens = function () {
                 const container = document.querySelector('#token_list_container');
-                fetch('/Admin/EmailTemplate/DiscoverAllTokens')
+                const systemName = document.querySelector('input[name="SystemName"]').value;
+                
+                // System name yoksa token yükleme
+                if (!systemName) {
+                    container.innerHTML = '<span class="text-muted fs-7">System Name bulunamadı. Token\'lar yüklenemiyor.</span>';
+                    return;
+                }
+                
+                const url = `/Admin/EmailTemplate/GetTokensForTemplate?systemName=${encodeURIComponent(systemName)}`;
+                
+                fetch(url)
                     .then(response => response.json())
                     .then(tokens => {
                         container.innerHTML = '';
@@ -149,7 +159,7 @@
                                 tokenEl.classList.add('badge', 'badge-light-dark', 'fs-8', 'fw-bold');
                                 tokenEl.style.cursor = 'pointer';
                                 tokenEl.title = 'Kopyalamak için tıkla';
-                                tokenEl.innerText = token;
+                                tokenEl.innerText = `{{${token}}}`;
 
                                 tokenEl.addEventListener('click', function () {
                                     navigator.clipboard.writeText(this.innerText).then(function () {

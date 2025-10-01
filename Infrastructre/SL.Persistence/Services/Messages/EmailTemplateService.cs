@@ -104,4 +104,31 @@ public class EmailTemplateService : IEmailTemplateService
             return Result.Failure("Durum değiştirilirken beklenmedik bir hata oluştu.", ErrorCode.InternalServerError);
         }
     }
+
+    public async Task<EmailTemplate?> GetTemplateBySystemNameAsync(string systemName)
+    {
+        try
+        {
+            _logger.LogInformation("Getting email template by system name: {SystemName}", systemName);
+            
+            var template = await _emailTemplateRepository.GetAll()
+                .FirstOrDefaultAsync(t => t.SystemName == systemName && t.IsActive);
+            
+            if (template == null)
+            {
+                _logger.LogWarning("Email template not found for system name: {SystemName}", systemName);
+                return null;
+            }
+            
+            _logger.LogInformation("Found email template for system name: {SystemName}, EmailAccountId: {EmailAccountId}", 
+                systemName, template.EmailAccountId);
+            
+            return template;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting email template by system name: {SystemName}", systemName);
+            return null;
+        }
+    }
 }

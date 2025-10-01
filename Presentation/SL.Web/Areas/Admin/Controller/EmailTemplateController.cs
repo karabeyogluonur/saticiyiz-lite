@@ -9,12 +9,12 @@ public class EmailTemplateController : BaseAdminController
 {
 
     private readonly IEmailTemplateService _emailTemplateService;
-    private readonly ITokenizerService _tokenizerService;
+    private readonly IMessageTemplateService _messageTemplateService;
 
-    public EmailTemplateController(IEmailTemplateService emailTemplateService, ITokenizerService tokenizerService)
+    public EmailTemplateController(IEmailTemplateService emailTemplateService, IMessageTemplateService messageTemplateService)
     {
         _emailTemplateService = emailTemplateService;
-        _tokenizerService = tokenizerService;
+        _messageTemplateService = messageTemplateService;
     }
 
     [HttpGet]
@@ -84,9 +84,9 @@ public class EmailTemplateController : BaseAdminController
     }
 
     [HttpGet]
-    public IActionResult DiscoverAllTokens()
+    public async Task<IActionResult> GetTokensForTemplate(string systemName)
     {
-        var tokens = _tokenizerService.GetAllAllowedTokens();
+        var tokens = await _messageTemplateService.GetAvailableTokensForSystemAsync(systemName);
         return Ok(tokens);
     }
 }

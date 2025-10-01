@@ -5,12 +5,15 @@ using SL.Application.Interfaces.Services.Context;
 using SL.Application.Interfaces.Services.Messages;
 using SL.Application.Interfaces.Services.Security;
 using SL.Application.Interfaces.Services.Tenants;
+using SL.Application.Providers.Messages;
 using SL.Infrastructre.Services.Messages;
 using SL.Infrastructre.Services.Security;
+using SL.Infrastructre.Services.Resilience;
 using SL.Infrastructure.Security;
 using SL.Infrastructure.Services.Caching;
 using SL.Infrastructure.Services.Context;
 using SL.Persistence.Utilities;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
 namespace SL.Infrastructre.Utilities
@@ -20,8 +23,16 @@ namespace SL.Infrastructre.Utilities
         public static void AddInfrastructreService(this IServiceCollection services)
         {
             services.AddSingleton<IPasswordHasherService, BCryptPasswordHasherService>();
-            services.AddScoped<ITokenizerService, TokenizerService>();
-            services.AddScoped<IMessageTokenProvider, CustomerTokenProvider>();
+            
+                services.AddScoped<ITokenRegistryService, TokenRegistryService>();
+                services.AddScoped<ITokenFactoryService, TokenFactoryService>();
+                services.AddScoped<IMessageTemplateService, MessageTemplateService>();
+                
+                services.AddScoped<IEmailWorkflowService, EmailWorkflowService>();
+                
+                services.AddScoped<ITokenProvider, UserTokenProvider>();
+                services.AddScoped<ITokenProvider, SystemTokenProvider>();
+            
             services.AddSingleton<IDataProtectionService, DataProtectionService>();
             services.AddScoped<ITenantContext, TenantContext>();
 
@@ -44,8 +55,6 @@ namespace SL.Infrastructre.Utilities
 
 
             services.AddScoped<IWorkContext, WorkContext>();
-
-
 
             services.AddScoped<IResilienceService, ResilienceService>();
         }

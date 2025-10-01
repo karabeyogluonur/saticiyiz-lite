@@ -69,7 +69,9 @@ namespace SL.Persistence.Services.Membership
             return await _cacheManager.GetAsync(cacheKey, async () =>
             {
                 var user = await _userManager.FindByEmailAsync(normalizedEmail);
-                return Guid.Parse(user?.Id);
+                if (user?.Id == null)
+                    return Guid.Empty;
+                return Guid.Parse(user.Id);
             });
 
         }

@@ -19,7 +19,6 @@ builder.Services.AddLogging();
 
 var app = builder.Build();
 
-// Middleware pipeline - Order is important!
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
@@ -32,7 +31,6 @@ app.AddAuthBuilder();
 app.UseSpecialRoute();
 app.UseSerilogRequestLogging();
 
-// 401 ve 403 hatalarının otomatik sağlanması için
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.Run();
