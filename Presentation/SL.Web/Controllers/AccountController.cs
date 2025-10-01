@@ -72,4 +72,10 @@ public class AccountController : BasePublicController
             await _authService.LogoutAsync();
         return RedirectToAction("Login");
     }
+
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 403 });
+    }
 }

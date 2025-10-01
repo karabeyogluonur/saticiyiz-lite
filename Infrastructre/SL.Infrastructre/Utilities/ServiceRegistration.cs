@@ -47,6 +47,7 @@ namespace SL.Infrastructre.Utilities
 
 
 
+            services.AddScoped<IResilienceService, ResilienceService>();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Serilog;
 using SL.Web.Mvc;
+using SL.Web.Mvc.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,19 +13,27 @@ builder.Services.AddFactoryServices();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddLayerServices();
 builder.Services.AddAuthServices();
+
 builder.Services.AddLogging();
 
 
 var app = builder.Build();
 
-
+// Middleware pipeline - Order is important!
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.DatabaseSeedAsync();
+
 app.AddDevelopmentBuilder();
 app.AddBaseBuilder();
 app.AddRouteBuilder();
 app.AddAuthBuilder();
 app.UseSpecialRoute();
 app.UseSerilogRequestLogging();
+
+// 401 ve 403 hatalarının otomatik sağlanması için
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 app.Run();
 

@@ -19,7 +19,6 @@ namespace SL.Web.Mvc
         {
             if (!application.Environment.IsDevelopment())
             {
-                application.UseExceptionHandler("/Home/Error");
                 application.UseHsts();
             }
         }
@@ -69,6 +68,7 @@ namespace SL.Web.Mvc
                 { "level", new LevelColumnWriter(true, NpgsqlDbType.Varchar) },
                 { "exception", new ExceptionColumnWriter(NpgsqlDbType.Text) },
                 { "raise_date", new TimestampColumnWriter(NpgsqlDbType.TimestampTz) },
+                { "correlation_id", new SinglePropertyColumnWriter("CorrelationId", PropertyWriteMethod.Raw, NpgsqlDbType.Text)},
                 { "tenant_id", new SinglePropertyColumnWriter("TenantId", PropertyWriteMethod.Raw, NpgsqlDbType.Uuid)},
                 { "properties", new PropertiesColumnWriter(NpgsqlDbType.Jsonb) },
                 { "machine_name", new SinglePropertyColumnWriter("MachineName", PropertyWriteMethod.Raw, NpgsqlDbType.Text) },
@@ -82,6 +82,7 @@ namespace SL.Web.Mvc
             .Enrich.WithEnvironmentUserName()
             .Enrich.WithProcessId()
             .Enrich.WithThreadId()
+            .Enrich.WithProperty("CorrelationId", "NotSet") // Default value, will be overridden by LogContext
             .WriteTo.Console()
             .WriteTo.PostgreSQL(
                 connectionString: connectionString,
